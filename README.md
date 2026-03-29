@@ -6,12 +6,11 @@
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 
-An AI-powered full-stack personal finance management application that tracks expenses, analyzes spending patterns, predicts future expenses, and generates intelligent financial insights using LLMs and Machine Learning.
+An AI-powered full-stack MERN application that tracks income & expenses, visualises spending patterns, and generates intelligent financial insights via the Gemini API.
 
-[Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [System Workflow](#-system-workflow) • [Future Scope](#-future-scope)
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [API Reference](#-api-reference) • [Future Scope](#-future-scope)
 
 </div>
 
@@ -19,29 +18,28 @@ An AI-powered full-stack personal finance management application that tracks exp
 
 ## ✨ Features
 
-| Category | Features |
+| Category | Details |
 |---|---|
-| 🔐 **Auth** | JWT-based User Authentication |
-| 💳 **Transactions** | Add / Edit / Delete Transactions |
-| 📊 **Dashboard** | Charts, Monthly Summary & Analytics |
-| 🤖 **AI Insights** | LLM-powered Personalized Financial Advice |
-| 📈 **ML Prediction** | Future Expense Prediction using Linear Regression |
-| 🚨 **Alerts** | Budget Limit Warning System |
-| 🌐 **API** | Secure REST API |
-| 📱 **UI** | Responsive Dashboard |
+| 🔐 **Auth** | JWT-based Register / Login with protected routes |
+| 💳 **Transactions** | Add / Edit / Delete income & expense transactions |
+| 🗂️ **Categories** | 15 pre-defined categories with date filtering |
+| 📊 **Dashboard** | Balance cards, doughnut & line charts, monthly summary |
+| 🤖 **AI Insights** | Gemini-powered personalised financial advice |
+| 🚨 **Budget Alerts** | Set monthly limits; warning at 80 %, danger at 100 % |
+| 🌐 **REST API** | Secure, rate-limited Express API |
+| 📱 **Responsive UI** | Dark-theme dashboard with sidebar navigation |
 
 ---
 
-## 🧠 AI & ML Capabilities
+## 🧠 AI Capabilities
 
-- **AI Insight Generator** — Powered by Gemini / OpenAI API with prompt engineering
-- **Expense Prediction** — Machine Learning model using Linear Regression (Scikit-learn)
-- **Trend Analysis** — Monthly spending trend detection
-- **Personalized Advice** — Insights tailored to individual transaction history
-- **Budget Warnings** — Proactive alerts when approaching spending limits
+- **Insight Generator** — Powered by Google Gemini 1.5 Flash with structured prompt engineering
+- **Trend Analysis** — Month-over-month spending trend detection
+- **Personalised Advice** — Insights tailored to each user's transaction history
+- **Graceful Fallback** — Rule-based insights when the API key is not configured
 
 **Example AI Insight:**
-> *"Your food expenses increased by 18% this month. Reducing dining expenses can help you stay within budget."*
+> *"Your Food expenses account for 35% of total spending this month. Reducing dining expenses can help you stay within budget and improve your savings rate."*
 
 ---
 
@@ -57,15 +55,13 @@ An AI-powered full-stack personal finance management application that tracks exp
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white)
+![dotenv](https://img.shields.io/badge/dotenv-ECD53F?style=flat&logo=dotenv&logoColor=black)
 
 ### Database
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
 ![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=flat&logo=mongoose&logoColor=white)
 
-### AI / ML
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
+### AI
 ![Gemini](https://img.shields.io/badge/Gemini_API-4285F4?style=flat&logo=google&logoColor=white)
 
 ---
@@ -73,27 +69,28 @@ An AI-powered full-stack personal finance management application that tracks exp
 ## 📂 Project Structure
 
 ```
-FinSmart-AI/
+AI-Finance-Tracking/
 │
 ├── frontend/               # React UI
 │   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Dashboard, Login, etc.
-│   │   └── utils/          # Axios config, helpers
+│   │   ├── components/     # Sidebar, StatCard, TransactionForm
+│   │   ├── context/        # AuthContext (JWT state)
+│   │   ├── pages/          # Dashboard, Transactions, Budget, Insights, Login, Register
+│   │   └── utils/          # Axios instance with interceptors
 │   └── package.json
 │
-├── backend/                # Node + Express API
-│   ├── routes/             # API routes
-│   ├── controllers/        # Business logic
-│   ├── models/             # Mongoose schemas
-│   ├── middleware/         # JWT auth middleware
+├── backend/                # Node.js + Express API
+│   ├── controllers/        # Business logic per resource
+│   ├── middleware/         # JWT auth middleware + rate limiter
+│   ├── models/             # Mongoose schemas (User, Transaction, Budget)
+│   ├── routes/             # Express routers
+│   ├── utils/              # Gemini AI helper
 │   └── server.js
 │
-├── ml-model/               # Python ML prediction service
-│   ├── predict.py
-│   └── requirements.txt
+├── docs/
+│   ├── API.md                            # Full API reference
+│   └── FinSmart-AI.postman_collection.json  # Import into Postman
 │
-├── docs/                   # Project documentation
 └── README.md
 ```
 
@@ -103,79 +100,70 @@ FinSmart-AI/
 
 ### Prerequisites
 
-- Node.js >= 16.x
-- Python >= 3.8
+- Node.js ≥ 16.x
 - MongoDB (local or Atlas)
-- Gemini / OpenAI API Key
+- Google Gemini API Key *(optional — falls back to mock insights)*
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Yash926/finsmart-ai.git
-cd finsmart-ai
+git clone https://github.com/Yash926/AI-Finance-Tracking.git
+cd AI-Finance-Tracking
 ```
 
-### 2. Environment Variables
-
-Create a `.env` file inside the `backend/` directory:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_url
-JWT_SECRET=your_jwt_secret
-AI_API_KEY=your_gemini_or_openai_api_key
-```
-
-### 3. Backend Setup
+### 2. Backend Setup
 
 ```bash
 cd backend
+cp .env.example .env        # fill in MONGO_URI, JWT_SECRET, GEMINI_API_KEY
 npm install
-npm run dev
+npm run dev                 # starts on http://localhost:5000
 ```
 
-> API will start at `http://localhost:5000`
+**.env variables**
 
-### 4. Frontend Setup
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/finsmart
+JWT_SECRET=your_super_secret_jwt_key
+GEMINI_API_KEY=your_gemini_api_key   # leave blank for mock insights
+NODE_ENV=development
+```
+
+### 3. Frontend Setup
 
 ```bash
 cd frontend
 npm install
-npm start
+npm start                   # starts on http://localhost:3000
 ```
 
-> App will start at `http://localhost:3000`
+### 4. Postman Testing
 
-### 5. ML Model Setup
-
-```bash
-cd ml-model
-pip install pandas scikit-learn
-python predict.py
-```
+Import `docs/FinSmart-AI.postman_collection.json` into Postman.  
+The Register and Login requests auto-save the JWT to the `token` collection variable so all subsequent requests are authenticated automatically.
 
 ---
 
 ## 📊 System Workflow
 
 ```
-User Login
-    │
-    ▼
-Add Transactions
-    │
-    ▼
-MongoDB Storage
-    │
-    ├──────────────────────────┐
-    ▼                          ▼
-AI Insight Generation    ML Expense Prediction
-(LLM API)                (Scikit-learn)
-    │                          │
-    └──────────┬───────────────┘
-               ▼
-      Dashboard Display
-    (Charts + Insights + Alerts)
+User Login / Register
+        │
+        ▼
+  Add Transactions
+        │
+        ▼
+  MongoDB Storage
+        │
+   ┌────┴────┐
+   ▼         ▼
+Dashboard  AI Insights
+(Charts)  (Gemini API)
+   │         │
+   └────┬────┘
+        ▼
+  Budget Alerts
 ```
 
 ---
@@ -183,17 +171,16 @@ AI Insight Generation    ML Expense Prediction
 ## 🔄 Development Methodology
 
 - **Agile** development workflow
-- **REST API** architecture with modular structure
+- **REST API** architecture with modular controllers / routes / models
 - **Version control** using Git & GitHub
-- **API testing** using Postman
+- **API testing** using Postman (collection included in `docs/`)
 - **Environment management** using dotenv
-- **Optional containerization** with Docker
 
 ---
 
 ## 🎯 Project Objective
 
-This project demonstrates how **Artificial Intelligence** and **Machine Learning** can be integrated into a full-stack MERN application to build an intelligent financial decision support system — similar to enterprise solutions developed at companies like Accenture and similar tech firms.
+This project demonstrates how **Artificial Intelligence** can be integrated into a full-stack MERN application to build an intelligent financial decision support system — similar to enterprise solutions developed at companies like Accenture and similar tech firms.
 
 ---
 
@@ -202,16 +189,21 @@ This project demonstrates how **Artificial Intelligence** and **Machine Learning
 - [ ] Bank API integration (Plaid / Razorpay)
 - [ ] Mobile app (React Native)
 - [ ] Voice assistant integration
-- [ ] Deep Learning-based predictions (LSTM)
 - [ ] Multi-user analytics & admin panel
 - [ ] Cloud deployment (AWS / Azure / GCP)
 
 ---
 
+## 📖 API Reference
+
+See [`docs/API.md`](docs/API.md) for the complete endpoint reference, or import the Postman collection from [`docs/FinSmart-AI.postman_collection.json`](docs/FinSmart-AI.postman_collection.json).
+
+---
+
 ## 👨‍💻 Author
 
-**Yash Tripathi**
-B.Tech — Computer Science Engineering
+**Yash Tripathi**  
+B.Tech — Computer Science Engineering  
 Lovely Professional University
 
 [![GitHub](https://img.shields.io/badge/GitHub-Yash926-181717?style=flat&logo=github)](https://github.com/Yash926)
