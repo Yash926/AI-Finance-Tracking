@@ -1,1 +1,0 @@
-Redesign: emerald/teal color scheme, UI polish, fix transaction date timezone bug

@@ -7,16 +7,25 @@ const INCOME_CATS  = ['Salary','Freelance','Investment','Gift','Other Income'];
 const EXPENSE_CATS = ['Food','Transport','Shopping','Entertainment','Health','Education','Utilities','Rent','Travel','Other Expense'];
 const CAT_ICONS    = { Salary:'💼',Freelance:'💻',Investment:'📈',Gift:'🎁','Other Income':'💰',Food:'🍔',Transport:'🚗',Shopping:'🛍️',Entertainment:'🎬',Health:'💊',Education:'📚',Utilities:'💡',Rent:'🏠',Travel:'✈️','Other Expense':'📦' };
 
+// Get today's date in local timezone as YYYY-MM-DD
+const localToday = () => {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
 export default function TransactionForm({ onSuccess, editData, onCancel }) {
   const { user } = useAuth();
-  const [form, setForm] = useState({ type: 'expense', amount: '', category: '', description: '', date: new Date().toISOString().split('T')[0] });
+  const [form, setForm] = useState({ type: 'expense', amount: '', category: '', description: '', date: localToday() });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (editData) setForm({
       type: editData.type, amount: editData.amount, category: editData.category,
       description: editData.description || '',
-      date: editData.date ? editData.date.split('T')[0] : new Date().toISOString().split('T')[0],
+      date: editData.date ? editData.date.split('T')[0] : localToday(),
     });
   }, [editData]);
 
