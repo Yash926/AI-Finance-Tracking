@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { useAuth } from '../context/AuthContext';
@@ -11,10 +12,11 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcEleme
 const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MO_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-const CHART_COLORS = ['#635bff','#8b5cf6','#ff4d6a','#f59e0b','#00d4aa','#06b6d4','#fbbf24','#a78bfa','#fb7185','#34d399'];
+const CHART_COLORS = ['#059669','#0d9488','#0891b2','#f59e0b','#f43f5e','#8b5cf6','#fbbf24','#34d399','#67e8f9','#a78bfa'];
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const location = useLocation();
   const [summary, setSummary] = useState(null);
   const [trend, setTrend]     = useState([]);
   const [recent, setRecent]   = useState([]);
@@ -41,7 +43,8 @@ export default function Dashboard() {
     setLoading(false);
   }, [user, selMonth, selYear]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  // Refetch on mount, on month/year change, and on every navigation to this page
+  useEffect(() => { fetchData(); }, [fetchData, location.pathname]);
 
   if (loading) return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '70vh', gap: 16 }}>
@@ -64,8 +67,8 @@ export default function Dashboard() {
   const lineData = {
     labels: MO,
     datasets: [
-      { label: 'Income',  data: trend.map(t => t.income),  borderColor: '#00d4aa', backgroundColor: 'rgba(0,212,170,0.06)',  fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#00d4aa' },
-      { label: 'Expense', data: trend.map(t => t.expense), borderColor: '#ff4d6a', backgroundColor: 'rgba(255,77,106,0.06)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#ff4d6a' },
+      { label: 'Income',  data: trend.map(t => t.income),  borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.08)',  fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#059669' },
+      { label: 'Expense', data: trend.map(t => t.expense), borderColor: '#f43f5e', backgroundColor: 'rgba(244,63,94,0.06)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#f43f5e' },
     ],
   };
 
@@ -117,9 +120,9 @@ export default function Dashboard() {
 
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, marginBottom: 20 }}>
-        <StatCard title="Total Income"   value={`₹${(summary?.totalIncome||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-trend-up"   color="#00d4aa" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="up" />
-        <StatCard title="Total Expenses" value={`₹${(summary?.totalExpense||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-trend-down" color="#ff4d6a" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="down" />
-        <StatCard title="Net Balance"    value={`₹${(summary?.netBalance||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}    icon="fas fa-scale-balanced"   color="#635bff" subtitle="Income − Expenses" />
+        <StatCard title="Total Income"   value={`₹${(summary?.totalIncome||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-trend-up"   color="#059669" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="up" />
+        <StatCard title="Total Expenses" value={`₹${(summary?.totalExpense||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-trend-down" color="#f43f5e" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="down" />
+        <StatCard title="Net Balance"    value={`₹${(summary?.netBalance||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}    icon="fas fa-scale-balanced"   color="#0d9488" subtitle="Income − Expenses" />
         <StatCard title="Savings Rate"   value={`${savingsRate}%`}                                                                    icon="fas fa-piggy-bank"       color="#f59e0b" subtitle={`${summary?.transactionCount||0} transactions`} />
       </div>
 

@@ -7,24 +7,32 @@ import { db } from '../firebase';
 const col = (uid) => collection(db, 'users', uid, 'transactions');
 
 // ── Write ────────────────────────────────────────────────
-export const addTransaction = (uid, data) =>
-  addDoc(col(uid), {
+export const addTransaction = async (uid, data) => {
+  // Parse date parts directly to avoid any timezone conversion
+  const [y, m, d] = data.date.split('-').map(Number);
+  const localDate = new Date(y, m - 1, d, 12, 0, 0); // local noon — stays in correct local day
+  const ref = await addDoc(col(uid), {
     type:        data.type,
     amount:      parseFloat(data.amount),
     category:    data.category,
     description: data.description || '',
-    date:        Timestamp.fromDate(new Date(data.date + 'T12:00:00')), // noon to avoid timezone edge cases
+    date:        Timestamp.fromDate(localDate),
     createdAt:   Timestamp.now(),
   });
+  return ref;
+};
 
-export const updateTransaction = (uid, id, data) =>
-  updateDoc(doc(db, 'users', uid, 'transactions', id), {
+export const updateTransaction = (uid, id, data) => {
+  const [y, m, d] = data.date.split('-').map(Number);
+  const localDate = new Date(y, m - 1, d, 12, 0, 0);
+  return updateDoc(doc(db, 'users', uid, 'transactions', id), {
     type:        data.type,
     amount:      parseFloat(data.amount),
     category:    data.category,
     description: data.description || '',
-    date:        Timestamp.fromDate(new Date(data.date + 'T12:00:00')),
+    date:        Timestamp.fromDate(localDate),
   });
+};
 
 export const deleteTransaction = (uid, id) =>
   deleteDoc(doc(db, 'users', uid, 'transactions', id));
@@ -36,7 +44,11 @@ const fetchAll = async (uid) => {
   return snap.docs.map(d => {
     const data = d.data();
     const ts = data.date?.toDate ? data.date.toDate() : new Date(data.date);
-    return { id: d.id, ...data, _ts: ts.getTime(), date: ts.toISOString() };
+    // Store local year/month/day to avoid UTC vs IST mismatch
+    const localYear  = ts.getFullYear();
+    const localMonth = ts.getMonth() + 1; // 1-12
+    const localDay   = ts.getDate();
+    return { id: d.id, ...data, _ts: ts.getTime(), date: ts.toISOString(), localYear, localMonth, localDay };
   });
 };
 
@@ -44,26 +56,43 @@ export const getTransactions = async (uid, filters = {}) => {
   const { type, category, startDate, endDate, limitCount } = filters;
   let results = await fetchAll(uid);
 
-  if (type)      results = results.filter(t => t.type === type);
-  if (category)  results = results.filter(t => t.category === category);
-  if (startDate) results = results.filter(t => t._ts >= new Date(startDate).getTime());
-  if (endDate)   results = results.filter(t => t._ts <= new Date(endDate).getTime());
+  if (type)     results = results.filter(t => t.type === type);
+  if (category) results = results.filter(t => t.category === category);
+
+  if (startDate || endDate) {
+    // Extract YYYY, MM, DD in local time to avoid timezone shifts
+    const toYMD = (d) => {
+      const dt = (d instanceof Date) ? d : new Date(d);
+      return { y: dt.getFullYear(), m: dt.getMonth(), day: dt.getDate() };
+    };
+    const toNum = (d) => { const { y, m, day } = toYMD(d); return y * 10000 + m * 100 + day; };
+
+    const startNum = startDate ? toNum(startDate) : 0;
+    const endNum   = endDate   ? toNum(endDate)   : 99999999;
+
+    results = results.filter(t => {
+      // t.date is ISO string — parse and use LOCAL time
+      const dt  = new Date(t.date);
+      const tNum = dt.getFullYear() * 10000 + dt.getMonth() * 100 + dt.getDate();
+      return tNum >= startNum && tNum <= endNum;
+    });
+  }
 
   results.sort((a, b) => b._ts - a._ts);
   if (limitCount) results = results.slice(0, limitCount);
 
-  console.log('📦 getTransactions result:', results.length, 'filters:', { type, category, startDate, endDate });
+  console.log('📦 getTransactions result:', results.length);
   return results;
 };
 
 export const getMonthlySummary = async (uid, month, year) => {
-  // Start = first moment of month, End = last moment of month
-  const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
-  const end   = new Date(year, month,     0, 23, 59, 59, 999);
-  console.log('📅 getMonthlySummary range:', start.toDateString(), '→', end.toDateString());
-
-  const txs = await getTransactions(uid, { startDate: start, endDate: end });
-  console.log('📅 txs in month:', txs.length);
+  // Fetch all and filter by year+month only — no date math needed
+  const all = await fetchAll(uid);
+  const txs = all.filter(t => {
+    const match = t.localYear === year && t.localMonth === month;
+    return match;
+  });
+  console.log('📅 getMonthlySummary', year, month, '→ txs:', txs.length);
 
   let totalIncome = 0, totalExpense = 0;
   const categoryBreakdown = {};
@@ -81,14 +110,9 @@ export const getMonthlySummary = async (uid, month, year) => {
 };
 
 export const getMonthlyTrend = async (uid, year) => {
-  const start = new Date(year, 0,  1, 0, 0, 0, 0);
-  const end   = new Date(year, 11, 31, 23, 59, 59, 999);
-  const txs   = await getTransactions(uid, { startDate: start, endDate: end });
-
+  const all  = await fetchAll(uid);
+  const txs  = all.filter(t => t.localYear === year);
   const trend = Array.from({ length: 12 }, (_, i) => ({ month: i + 1, income: 0, expense: 0 }));
-  txs.forEach(t => {
-    const m = new Date(t.date).getMonth();
-    trend[m][t.type] += t.amount;
-  });
+  txs.forEach(t => { trend[t.localMonth - 1][t.type] += t.amount; });
   return trend;
 };

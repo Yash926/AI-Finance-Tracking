@@ -37,10 +37,10 @@ export default function Register() {
       <div style={{ width: '100%', maxWidth: 440, position: 'relative' }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{
-            width: 56, height: 56, borderRadius: 16, margin: '0 auto 18px',
-            background: 'linear-gradient(135deg, #635bff, #8b5cf6)',
+            width: 60, height: 60, borderRadius: 18, margin: '0 auto 20px',
+            background: 'linear-gradient(135deg, #059669, #0d9488)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 8px 24px rgba(99,91,255,0.35)',
+            boxShadow: '0 8px 28px rgba(5,150,105,0.4)',
           }}>
             <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 22 }} />
           </div>

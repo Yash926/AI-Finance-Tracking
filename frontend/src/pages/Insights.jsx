@@ -7,6 +7,22 @@ import { auth } from '../firebase';
 
 const MO = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
+function generateLocalInsights({ totalIncome = 0, totalExpense = 0, netBalance = 0, categoryBreakdown = {} }) {
+  const savingsRate = totalIncome > 0 ? ((netBalance / totalIncome) * 100).toFixed(1) : 0;
+  const top = Object.entries(categoryBreakdown).sort((a, b) => b[1] - a[1])[0];
+  return [
+    `• 💰 Financial Overview: You earned ₹${totalIncome.toFixed(2)} and spent ₹${totalExpense.toFixed(2)}, resulting in a net balance of ₹${netBalance.toFixed(2)}.`,
+    savingsRate >= 20
+      ? `• ✅ Savings Rate: Excellent! You saved ${savingsRate}% of your income. Keep it up!`
+      : savingsRate > 0
+        ? `• ⚠️ Savings Rate: You saved ${savingsRate}% of your income. Aim for at least 20%.`
+        : `• 🚨 Savings Alert: Your expenses exceeded your income this month. Review your spending immediately.`,
+    top ? `• 📊 Top Expense: "${top[0]}" accounts for ${((top[1] / totalExpense) * 100).toFixed(1)}% of total expenses (₹${top[1].toFixed(2)}).` : null,
+    `• 💡 Recommendation: Set a monthly budget per category and review it weekly to stay on track.`,
+    `• 🎯 Goal: Build an emergency fund of ≈₹${(totalExpense * 3).toFixed(2)} (3 months of expenses).`,
+  ].filter(Boolean).join('\n\n');
+}
+
 export default function Insights() {
   const { user } = useAuth();
   const [month, setMonth]       = useState(new Date().getMonth() + 1);
@@ -19,26 +35,43 @@ export default function Insights() {
     setLoading(true); setInsights('');
     try {
       const cur = await getMonthlySummary(user.uid, month, year);
-      const pm = month === 1 ? 12 : month - 1;
-      const py = month === 1 ? year - 1 : year;
-      const prevTxs = await getTransactions(user.uid, { startDate: new Date(py, pm-1, 1), endDate: new Date(py, pm, 0, 23, 59, 59) });
+      console.log('🤖 Insights summary:', cur);
+
+      const pm  = month === 1 ? 12 : month - 1;
+      const py  = month === 1 ? year - 1 : year;
+      const prevStart = new Date(py, pm - 1, 1, 0, 0, 0, 0);
+      const prevEnd   = new Date(py, pm,     0, 23, 59, 59, 999);
+      const prevTxs   = await getTransactions(user.uid, { startDate: prevStart, endDate: prevEnd });
+
       let pi = 0, pe = 0; const pc = {};
-      prevTxs.forEach(t => { if (t.type==='income') pi+=t.amount; else { pe+=t.amount; pc[t.category]=(pc[t.category]||0)+t.amount; } });
+      prevTxs.forEach(t => {
+        if (t.type === 'income') pi += t.amount;
+        else { pe += t.amount; pc[t.category] = (pc[t.category] || 0) + t.amount; }
+      });
 
       if (cur.transactionCount === 0) {
         setInsights('• No transactions found for the selected period. Start adding your income and expenses to get personalized AI financial insights!');
         setSummary(cur); setLoading(false); return;
       }
 
-      const idToken = await auth.currentUser.getIdToken();
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_AI_API_URL || 'http://localhost:5000'}/api/ai/insights`,
-        { summary: { ...cur, previousMonth: { totalIncome: pi, totalExpense: pe, netBalance: pi-pe, categoryBreakdown: pc } } },
-        { headers: { Authorization: `Bearer ${idToken}` } }
-      );
-      setInsights(data.insights); setSummary(cur);
-    } catch (err) { toast.error(err.response?.data?.message || 'Failed to generate insights'); }
-    finally { setLoading(false); }
+      setSummary(cur);
+
+      try {
+        const idToken = await auth.currentUser.getIdToken();
+        const { data } = await axios.post(
+          `${process.env.REACT_APP_AI_API_URL || 'http://localhost:5000'}/api/ai/insights`,
+          { summary: { ...cur, previousMonth: { totalIncome: pi, totalExpense: pe, netBalance: pi - pe, categoryBreakdown: pc } } },
+          { headers: { Authorization: `Bearer ${idToken}` }, timeout: 15000 }
+        );
+        setInsights(data.insights);
+      } catch (backendErr) {
+        console.warn('Backend unavailable, using local insights:', backendErr.message);
+        setInsights(generateLocalInsights(cur));
+      }
+    } catch (err) {
+      console.error('Insights error:', err);
+      toast.error(err.response?.data?.message || err.message || 'Failed to generate insights');
+    } finally { setLoading(false); }
   };
 
   const renderInsights = (text) =>
@@ -59,7 +92,7 @@ export default function Insights() {
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div>
           <h1 className="t-title" style={{ fontSize: '1.375rem', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div className="icon-box icon-box-sm" style={{ background: 'linear-gradient(135deg, #635bff, #8b5cf6)', flexShrink: 0 }}>
+            <div className="icon-box icon-box-sm" style={{ background: 'linear-gradient(135deg, #059669, #0d9488)', flexShrink: 0 }}>
               <i className="fas fa-robot" style={{ color: '#fff', fontSize: 12 }} />
             </div>
             AI Financial Insights
@@ -108,7 +141,7 @@ export default function Insights() {
       {insights ? (
         <div className="card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, paddingBottom: 18, borderBottom: '1px solid var(--border-2)' }}>
-            <div className="icon-box icon-box-md" style={{ background: 'linear-gradient(135deg, #635bff, #8b5cf6)', boxShadow: '0 4px 12px rgba(99,91,255,0.3)', flexShrink: 0 }}>
+            <div className="icon-box icon-box-md" style={{ background: 'linear-gradient(135deg, #059669, #0d9488)', boxShadow: '0 4px 14px rgba(5,150,105,0.35)', flexShrink: 0 }}>
               <i className="fas fa-robot" style={{ color: '#fff', fontSize: 16 }} />
             </div>
             <div style={{ flex: 1 }}>
