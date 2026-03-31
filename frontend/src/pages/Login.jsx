@@ -3,12 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 
-const FEATURES = [
-  { icon: 'fas fa-chart-line', label: 'Smart Analytics', color: '#059669' },
-  { icon: 'fas fa-robot',      label: 'AI Insights',     color: '#0d9488' },
-  { icon: 'fas fa-shield-alt', label: 'Bank-grade Security', color: '#0891b2' },
-];
-
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -27,68 +21,84 @@ export default function Login() {
     } finally { setLoading(false); }
   };
 
+  const fields = [
+    { label: 'Email address', key: 'email', type: 'email', placeholder: 'you@example.com', icon: 'fas fa-envelope' },
+    { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••', icon: 'fas fa-lock' },
+  ];
+
+  const features = [
+    { icon: 'fas fa-chart-pie',     text: 'Real-time spending analytics' },
+    { icon: 'fas fa-sparkles',      text: 'AI insights powered by Gemini' },
+    { icon: 'fas fa-shield-halved', text: 'Secured with Firebase Auth' },
+  ];
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--auth-bg)', padding: 24 }}>
-      {/* Ambient orbs */}
-      <div style={{ position: 'fixed', top: '5%', left: '10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(5,150,105,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
-      <div style={{ position: 'fixed', bottom: '10%', right: '5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(13,148,136,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
-      <div style={{ width: '100%', maxWidth: 420, position: 'relative' }}>
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div style={{
-            width: 60, height: 60, borderRadius: 18, margin: '0 auto 20px',
-            background: 'linear-gradient(135deg, #059669, #0d9488)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 8px 28px rgba(5,150,105,0.4)',
-          }}>
-            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 24 }} />
+    <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--auth-bg)' }}>
+      {/* Left branding panel */}
+      <div style={{
+        flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        padding: '60px 64px', position: 'relative', overflow: 'hidden',
+        background: 'linear-gradient(160deg, #052e1c 0%, #0a1f15 60%, #030d0a 100%)',
+        borderRight: '1px solid rgba(16,185,129,0.1)',
+      }}>
+        <div style={{ position: 'absolute', top: '15%', left: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(5,150,105,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '20%', right: '5%', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 56 }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #059669, #0d9488)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(5,150,105,0.4)' }}>
+              <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 20 }} />
+            </div>
+            <div>
+              <div style={{ color: '#f0fdf4', fontWeight: 800, fontSize: 20, letterSpacing: '-0.03em' }}>FinSmart AI</div>
+              <div style={{ color: 'rgba(52,211,153,0.5)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Personal Finance</div>
+            </div>
           </div>
-          <h1 className="t-display" style={{ fontSize: '1.875rem', marginBottom: 8 }}>Welcome back</h1>
-          <p className="t-body">Sign in to your FinSmart AI account</p>
-        </div>
-
-        {/* Feature pills */}
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 28, flexWrap: 'wrap' }}>
-          {FEATURES.map(({ icon, label, color }) => (
-            <div key={label} style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              padding: '6px 14px', borderRadius: 99,
-              background: 'var(--bg-card)', border: '1px solid var(--border-1)',
-              fontSize: 12, fontWeight: 500, color: 'var(--text-2)',
-            }}>
-              <i className={icon} style={{ color, fontSize: 11 }} />
-              {label}
+          <h2 style={{ color: '#f0fdf4', fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.15, marginBottom: 20 }}>
+            Your finances,<br /><span style={{ color: '#34d399' }}>intelligently</span> managed.
+          </h2>
+          <p style={{ color: 'rgba(167,243,208,0.5)', fontSize: 15, lineHeight: 1.7, maxWidth: 360, marginBottom: 48 }}>
+            Track income and expenses, set budgets, and get AI-powered insights to make smarter financial decisions.
+          </p>
+          {features.map(({ icon, text }) => (
+            <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(5,150,105,0.15)', border: '1px solid rgba(5,150,105,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <i className={icon} style={{ color: '#34d399', fontSize: 13 }} />
+              </div>
+              <span style={{ color: 'rgba(167,243,208,0.6)', fontSize: 14 }}>{text}</span>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* Card */}
-        <div className="card card-lg" style={{ boxShadow: 'var(--shadow-lg)', borderColor: 'var(--border-1)' }}>
+      {/* Right form panel */}
+      <div style={{ width: 480, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 48px', flexShrink: 0 }}>
+        <div style={{ width: '100%', maxWidth: 380 }}>
+          <div style={{ marginBottom: 36 }}>
+            <h1 style={{ color: 'var(--text-1)', fontSize: '1.875rem', fontWeight: 800, letterSpacing: '-0.04em', marginBottom: 8 }}>Welcome back</h1>
+            <p className="t-body">Sign in to your FinSmart AI account</p>
+          </div>
           <form onSubmit={handleSubmit}>
-            {[
-              { label: 'Email', key: 'email', type: 'email', placeholder: 'you@example.com', icon: 'fas fa-envelope' },
-              { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••', icon: 'fas fa-lock' },
-            ].map(({ label, key, type, placeholder, icon }) => (
-              <div key={key} style={{ marginBottom: 18 }}>
+            {fields.map(({ label, key, type, placeholder, icon }) => (
+              <div key={key} style={{ marginBottom: 20 }}>
                 <label className="field-label">{label}</label>
                 <div style={{ position: 'relative' }}>
                   <i className={icon} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)', fontSize: 13, pointerEvents: 'none' }} />
                   <input type={type} value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })}
-                    placeholder={placeholder} required className="fin-input" style={{ paddingLeft: 40 }} />
+                    placeholder={placeholder} required className="fin-input" style={{ paddingLeft: 42 }} />
                 </div>
               </div>
             ))}
-            <button type="submit" disabled={loading} className="btn btn-primary btn-lg btn-full" style={{ marginTop: 8 }}>
-              {loading ? <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />Signing in...</> : 'Sign In →'}
+            <button type="submit" disabled={loading} className="btn btn-primary btn-full btn-lg" style={{ marginTop: 8, borderRadius: 12 }}>
+              {loading
+                ? <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />Signing in...</>
+                : <>Sign In <i className="fas fa-arrow-right" style={{ fontSize: 12 }} /></>}
             </button>
           </form>
+          <div style={{ textAlign: 'center', marginTop: 28 }}>
+            <span className="t-body">Don't have an account? </span>
+            <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>Create one free →</Link>
+          </div>
         </div>
-
-        <p className="t-body" style={{ textAlign: 'center', marginTop: 20 }}>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>Create one free →</Link>
-        </p>
       </div>
     </div>
   );
