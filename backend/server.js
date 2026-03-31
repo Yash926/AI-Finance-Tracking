@@ -48,19 +48,27 @@ app.get('/api/health', (_, res) => res.json({ status: 'OK' }));
 // ─── Gemini AI ────────────────────────────────────────────────────────────────
 async function generateInsights(summary) {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey === 'your_gemini_api_key_here') return mockInsights(summary);
+
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    return mockInsights(summary);
+  }
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+    // ✅ FIXED MODEL
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash'
+    });
+
     const result = await model.generateContent(buildPrompt(summary));
+
     return result.response.text();
   } catch (err) {
     console.error('Gemini API error:', err.message);
     return mockInsights(summary);
   }
 }
-
 function buildPrompt({ totalIncome, totalExpense, netBalance, categoryBreakdown, previousMonth }) {
   const cats = Object.entries(categoryBreakdown || {}).map(([c, a]) => `  - ${c}: ₹${a.toFixed(2)}`).join('\n');
   const prev = previousMonth
