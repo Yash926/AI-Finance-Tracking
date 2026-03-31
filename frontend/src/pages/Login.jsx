@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
@@ -14,12 +13,11 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await api.post('/auth/login', form);
-      login(data.token, data.user);
-      toast.success(`Welcome back, ${data.user.name}!`);
+      await login(form.email, form.password);
+      toast.success('Welcome back!');
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed');
+      toast.error(err.code === 'auth/invalid-credential' ? 'Invalid email or password' : err.message);
     } finally {
       setLoading(false);
     }
@@ -35,7 +33,6 @@ export default function Login() {
         border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px',
         padding: '40px', width: '100%', maxWidth: '420px',
       }}>
-        {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
             width: 60, height: 60, borderRadius: '16px', margin: '0 auto 16px',
@@ -51,26 +48,16 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px' }}>Email Address</label>
-            <input
-              type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="you@example.com" required
-              style={{
-                width: '100%', padding: '12px 16px', borderRadius: '10px',
-                background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.12)',
-                color: '#e2e8f0', fontSize: '14px', outline: 'none',
-              }}
+              style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.12)', color: '#e2e8f0', fontSize: '14px', outline: 'none' }}
             />
           </div>
           <div style={{ marginBottom: '24px' }}>
             <label style={{ color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px' }}>Password</label>
-            <input
-              type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
               placeholder="••••••••" required
-              style={{
-                width: '100%', padding: '12px 16px', borderRadius: '10px',
-                background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.12)',
-                color: '#e2e8f0', fontSize: '14px', outline: 'none',
-              }}
+              style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.12)', color: '#e2e8f0', fontSize: '14px', outline: 'none' }}
             />
           </div>
           <button type="submit" disabled={loading} style={{
@@ -84,9 +71,7 @@ export default function Login() {
 
         <p style={{ textAlign: 'center', marginTop: '24px', color: '#94a3b8', fontSize: '14px' }}>
           Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#4cc9f0', textDecoration: 'none', fontWeight: 600 }}>
-            Register
-          </Link>
+          <Link to="/register" style={{ color: '#4cc9f0', textDecoration: 'none', fontWeight: 600 }}>Register</Link>
         </p>
       </div>
     </div>

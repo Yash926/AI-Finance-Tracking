@@ -1,82 +1,101 @@
 /**
- * FinSmart AI – Backend Server Entry Point
- * Express + MongoDB + JWT Authentication
+ * FinSmart AI – Minimal AI Backend
+ * Only handles Gemini AI insights. Auth, DB → Firebase.
  */
+const express   = require('express');
+const cors      = require('cors');
+const dotenv    = require('dotenv');
+const admin     = require('firebase-admin');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const rateLimit = require('express-rate-limit');
-
-// Load environment variables
 dotenv.config();
 
+// ─── Firebase Admin Init ─────────────────────────────────────────────────────
+admin.initializeApp({
+  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)),
+});
+
+// ─── Express Setup ────────────────────────────────────────────────────────────
 const app = express();
-
-// ─── Middleware ─────────────────────────────────────────────────────────────
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true,
-}));
+app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// ─── Rate Limiting ───────────────────────────────────────────────────────────
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: 'Too many requests, please try again later.' },
+// ─── Firebase Auth Middleware ─────────────────────────────────────────────────
+const verifyToken = async (req, res, next) => {
+  const header = req.headers.authorization;
+  if (!header?.startsWith('Bearer ')) return res.status(401).json({ message: 'Unauthorized' });
+  try {
+    req.user = await admin.auth().verifyIdToken(header.split(' ')[1]);
+    next();
+  } catch {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+};
+
+// ─── AI Insights Route ────────────────────────────────────────────────────────
+app.post('/api/ai/insights', verifyToken, async (req, res) => {
+  try {
+    const { summary } = req.body;
+    const insights = await generateInsights(summary);
+    res.json({ success: true, insights });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to generate insights' });
+  }
 });
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: 'Too many auth attempts, please try again later.' },
-});
+app.get('/api/health', (_, res) => res.json({ status: 'OK' }));
 
-app.use(globalLimiter);
+// ─── Gemini AI ────────────────────────────────────────────────────────────────
+async function generateInsights(summary) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') return mockInsights(summary);
 
-// ─── Routes ─────────────────────────────────────────────────────────────────
-const authRoutes        = require('./routes/authRoutes');
-const transactionRoutes = require('./routes/transactionRoutes');
-const budgetRoutes      = require('./routes/budgetRoutes');
-const aiRoutes          = require('./routes/aiRoutes');
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const result = await model.generateContent(buildPrompt(summary));
+    return result.response.text();
+  } catch {
+    return mockInsights(summary);
+  }
+}
 
-app.use('/api/auth',         authLimiter, authRoutes);
-app.use('/api/transactions', transactionRoutes);
-app.use('/api/budget',       budgetRoutes);
-app.use('/api/ai',           aiRoutes);
+function buildPrompt({ totalIncome, totalExpense, netBalance, categoryBreakdown, previousMonth }) {
+  const cats = Object.entries(categoryBreakdown || {}).map(([c, a]) => `  - ${c}: ₹${a.toFixed(2)}`).join('\n');
+  const prev = previousMonth
+    ? `\nPrevious Month:\n  Total Expense: ₹${previousMonth.totalExpense?.toFixed(2)}\n  Categories:\n${Object.entries(previousMonth.categoryBreakdown || {}).map(([c, a]) => `  - ${c}: ₹${a.toFixed(2)}`).join('\n')}`
+    : '';
+  return `You are a professional financial advisor. Analyze the following monthly financial data and provide personalized, actionable advice in 4-5 bullet points.
 
-// ─── Health Check ────────────────────────────────────────────────────────────
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'FinSmart AI API is running', timestamp: new Date().toISOString() });
-});
+Current Month:
+  Total Income:  ₹${totalIncome?.toFixed(2) || 0}
+  Total Expense: ₹${totalExpense?.toFixed(2) || 0}
+  Net Balance:   ₹${netBalance?.toFixed(2) || 0}
 
-// ─── Global Error Handler ────────────────────────────────────────────────────
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Internal Server Error',
-  });
-});
+Expense Breakdown:
+${cats || '  No expenses recorded'}
+${prev}
 
-// ─── MongoDB Connection ──────────────────────────────────────────────────────
+Provide: overall health assessment, spending alerts, savings rate, 2-3 recommendations, motivational closing. Format as bullet points. Use ₹ for currency.`;
+}
+
+function mockInsights({ totalIncome = 0, totalExpense = 0, netBalance = 0, categoryBreakdown = {} }) {
+  const savingsRate = totalIncome > 0 ? ((netBalance / totalIncome) * 100).toFixed(1) : 0;
+  const top = Object.entries(categoryBreakdown).sort((a, b) => b[1] - a[1])[0];
+  const lines = [
+    `• 💰 Financial Overview: You earned ₹${totalIncome.toFixed(2)} and spent ₹${totalExpense.toFixed(2)}, resulting in a net balance of ₹${netBalance.toFixed(2)}.`,
+    savingsRate >= 20
+      ? `• ✅ Savings Rate: Excellent! You saved ${savingsRate}% of your income.`
+      : savingsRate > 0
+        ? `• ⚠️ Savings Rate: You saved ${savingsRate}%. Aim for at least 20%.`
+        : `• 🚨 Savings Alert: Expenses exceeded income. Review your spending immediately.`,
+    top ? `• 📊 Top Expense: "${top[0]}" is ${((top[1] / totalExpense) * 100).toFixed(1)}% of total expenses (₹${top[1].toFixed(2)}).` : null,
+    `• 💡 Recommendation: Set a monthly budget per category and review it weekly.`,
+    `• 🎯 Goal: Build an emergency fund of ≈₹${(totalExpense * 3).toFixed(2)} (3 months of expenses).`,
+  ].filter(Boolean);
+  return lines.join('\n\n');
+}
+
+// ─── Start ────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/finsmart';
-
-mongoose
-  .connect(MONGO_URI)
-  .then(() => {
-    console.log('✅ MongoDB connected');
-    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
-  })
-  .catch((err) => {
-    console.error('❌ MongoDB connection error:', err.message);
-    process.exit(1);
-  });
+app.listen(PORT, () => console.log(`🚀 AI server running on http://localhost:${PORT}`));
