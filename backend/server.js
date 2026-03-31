@@ -55,7 +55,8 @@ async function generateInsights(summary) {
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const result = await model.generateContent(buildPrompt(summary));
     return result.response.text();
-  } catch {
+  } catch (err) {
+    console.error('Gemini API error:', err.message);
     return mockInsights(summary);
   }
 }

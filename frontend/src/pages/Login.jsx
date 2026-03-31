@@ -3,6 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 
+const FEATURES = [
+  { icon: 'fas fa-chart-line', label: 'Smart Analytics', color: '#635bff' },
+  { icon: 'fas fa-robot',      label: 'AI Insights',     color: '#00d4aa' },
+  { icon: 'fas fa-shield-alt', label: 'Secure & Private', color: '#f59e0b' },
+];
+
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -18,60 +24,71 @@ export default function Login() {
       navigate('/');
     } catch (err) {
       toast.error(err.code === 'auth/invalid-credential' ? 'Invalid email or password' : err.message);
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%)',
-    }}>
-      <div style={{
-        background: 'rgba(22,33,62,0.9)', backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px',
-        padding: '40px', width: '100%', maxWidth: '420px',
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--auth-bg)', padding: 24 }}>
+      {/* Ambient orbs */}
+      <div style={{ position: 'fixed', top: '10%', left: '15%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,91,255,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'fixed', bottom: '15%', right: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+      <div style={{ width: '100%', maxWidth: 420, position: 'relative' }}>
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: 36 }}>
           <div style={{
-            width: 60, height: 60, borderRadius: '16px', margin: '0 auto 16px',
-            background: 'linear-gradient(135deg, #4361ee, #7209b7)',
+            width: 56, height: 56, borderRadius: 16, margin: '0 auto 18px',
+            background: 'linear-gradient(135deg, #635bff, #8b5cf6)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 8px 24px rgba(99,91,255,0.35)',
           }}>
-            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: '26px' }} />
+            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 22 }} />
           </div>
-          <h2 style={{ color: '#e2e8f0', fontWeight: 700, marginBottom: '4px' }}>FinSmart AI</h2>
-          <p style={{ color: '#94a3b8', fontSize: '14px' }}>Intelligent Personal Finance Assistant</p>
+          <h1 className="t-display" style={{ fontSize: '1.75rem', marginBottom: 6 }}>Welcome back</h1>
+          <p className="t-body">Sign in to your FinSmart AI account</p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px' }}>Email Address</label>
-            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-              placeholder="you@example.com" required
-              style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.12)', color: '#e2e8f0', fontSize: '14px', outline: 'none' }}
-            />
-          </div>
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px' }}>Password</label>
-            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
-              placeholder="••••••••" required
-              style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.12)', color: '#e2e8f0', fontSize: '14px', outline: 'none' }}
-            />
-          </div>
-          <button type="submit" disabled={loading} style={{
-            width: '100%', padding: '13px', borderRadius: '10px', border: 'none',
-            background: 'linear-gradient(135deg, #4361ee, #7209b7)',
-            color: '#fff', fontWeight: 600, fontSize: '15px', cursor: 'pointer',
-          }}>
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
+        {/* Feature pills */}
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 28 }}>
+          {FEATURES.map(({ icon, label, color }) => (
+            <div key={label} style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '6px 12px', borderRadius: 99,
+              background: 'var(--bg-card)', border: '1px solid var(--border-1)',
+              fontSize: 12, fontWeight: 500, color: 'var(--text-2)',
+            }}>
+              <i className={icon} style={{ color, fontSize: 11 }} />
+              {label}
+            </div>
+          ))}
+        </div>
 
-        <p style={{ textAlign: 'center', marginTop: '24px', color: '#94a3b8', fontSize: '14px' }}>
+        {/* Card */}
+        <div className="card card-lg" style={{ boxShadow: 'var(--shadow-lg)' }}>
+          <form onSubmit={handleSubmit}>
+            {[
+              { label: 'Email', key: 'email', type: 'email', placeholder: 'you@example.com', icon: 'fas fa-envelope' },
+              { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••', icon: 'fas fa-lock' },
+            ].map(({ label, key, type, placeholder, icon }) => (
+              <div key={key} style={{ marginBottom: 18 }}>
+                <label className="field-label">{label}</label>
+                <div style={{ position: 'relative' }}>
+                  <i className={icon} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)', fontSize: 13, pointerEvents: 'none' }} />
+                  <input type={type} value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })}
+                    placeholder={placeholder} required className="fin-input" style={{ paddingLeft: 40 }} />
+                </div>
+              </div>
+            ))}
+
+            <button type="submit" disabled={loading} className="btn btn-primary btn-lg btn-full" style={{ marginTop: 8 }}>
+              {loading ? <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />Signing in...</> : 'Sign In'}
+            </button>
+          </form>
+        </div>
+
+        <p className="t-body" style={{ textAlign: 'center', marginTop: 20 }}>
           Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#4cc9f0', textDecoration: 'none', fontWeight: 600 }}>Register</Link>
+          <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>Create one free →</Link>
         </p>
       </div>
     </div>

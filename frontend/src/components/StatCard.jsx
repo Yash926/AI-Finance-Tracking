@@ -1,29 +1,45 @@
 import React from 'react';
 
-export default function StatCard({ title, value, icon, color, subtitle }) {
+export default function StatCard({ title, value, icon, color, subtitle, trend }) {
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, #16213e 0%, #1a1a2e 100%)',
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: '16px', padding: '20px',
-      transition: 'transform 0.2s, box-shadow 0.2s',
-    }}
-      onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.3)'; }}
-      onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div>
-          <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{title}</p>
-          <h3 style={{ color: '#e2e8f0', fontSize: '26px', fontWeight: 700, margin: 0 }}>{value}</h3>
-          {subtitle && <p style={{ color: '#64748b', fontSize: '12px', marginTop: '4px' }}>{subtitle}</p>}
+    <div className="card card-interactive" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Ambient glow */}
+      <div style={{
+        position: 'absolute', top: -30, right: -30,
+        width: 100, height: 100, borderRadius: '50%',
+        background: `${color}14`, filter: 'blur(24px)',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p className="t-label" style={{ marginBottom: 10 }}>{title}</p>
+          <div style={{
+            fontSize: '1.625rem', fontWeight: 800, color: 'var(--text-1)',
+            letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 8,
+          }}>
+            {value}
+          </div>
+          {subtitle && (
+            <p className="t-small" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              {trend === 'up'   && <span style={{ color: 'var(--success)', fontSize: 9 }}>▲</span>}
+              {trend === 'down' && <span style={{ color: 'var(--danger)',  fontSize: 9 }}>▼</span>}
+              {subtitle}
+            </p>
+          )}
         </div>
-        <div style={{
-          width: 48, height: 48, borderRadius: '12px',
-          background: `${color}22`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <i className={icon} style={{ color, fontSize: '20px' }} />
+
+        <div className="icon-box icon-box-md" style={{ background: `${color}14`, border: `1px solid ${color}28`, flexShrink: 0 }}>
+          <i className={icon} style={{ color, fontSize: 17 }} />
         </div>
       </div>
+
+      {/* Bottom accent */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        height: 2, borderRadius: '0 0 16px 16px',
+        background: `linear-gradient(90deg, ${color}60, transparent)`,
+      }} />
     </div>
   );
 }

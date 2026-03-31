@@ -3,6 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 
+const FIELDS = [
+  { label: 'Full Name',        key: 'name',     type: 'text',     placeholder: 'John Doe',          icon: 'fas fa-user' },
+  { label: 'Email Address',    key: 'email',    type: 'email',    placeholder: 'you@example.com',   icon: 'fas fa-envelope' },
+  { label: 'Password',         key: 'password', type: 'password', placeholder: 'Min. 6 characters', icon: 'fas fa-lock' },
+  { label: 'Confirm Password', key: 'confirm',  type: 'password', placeholder: 'Re-enter password', icon: 'fas fa-check' },
+];
+
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [loading, setLoading] = useState(false);
@@ -16,53 +23,53 @@ export default function Register() {
     setLoading(true);
     try {
       await register(form.name, form.email, form.password);
-      toast.success('Account created successfully!');
+      toast.success('Account created!');
       navigate('/');
     } catch (err) {
       toast.error(err.code === 'auth/email-already-in-use' ? 'Email already registered' : err.message);
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
-
-  const inputStyle = {
-    width: '100%', padding: '12px 16px', borderRadius: '10px',
-    background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.12)',
-    color: '#e2e8f0', fontSize: '14px', outline: 'none',
-  };
-
-  const fields = [
-    { label: 'Full Name', key: 'name', type: 'text', placeholder: 'John Doe' },
-    { label: 'Email Address', key: 'email', type: 'email', placeholder: 'you@example.com' },
-    { label: 'Password', key: 'password', type: 'password', placeholder: 'Min. 6 characters' },
-    { label: 'Confirm Password', key: 'confirm', type: 'password', placeholder: 'Re-enter password' },
-  ];
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%)' }}>
-      <div style={{ background: 'rgba(22,33,62,0.9)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', padding: '40px', width: '100%', maxWidth: '420px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ width: 60, height: 60, borderRadius: '16px', margin: '0 auto 16px', background: 'linear-gradient(135deg, #4361ee, #7209b7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: '26px' }} />
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--auth-bg)', padding: 24 }}>
+      <div style={{ position: 'fixed', top: '20%', right: '10%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+      <div style={{ width: '100%', maxWidth: 440, position: 'relative' }}>
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <div style={{
+            width: 56, height: 56, borderRadius: 16, margin: '0 auto 18px',
+            background: 'linear-gradient(135deg, #635bff, #8b5cf6)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 8px 24px rgba(99,91,255,0.35)',
+          }}>
+            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 22 }} />
           </div>
-          <h2 style={{ color: '#e2e8f0', fontWeight: 700, marginBottom: '4px' }}>Create Account</h2>
-          <p style={{ color: '#94a3b8', fontSize: '14px' }}>Join FinSmart AI today</p>
+          <h1 className="t-display" style={{ fontSize: '1.75rem', marginBottom: 6 }}>Create account</h1>
+          <p className="t-body">Start your financial journey with FinSmart AI</p>
         </div>
-        <form onSubmit={handleSubmit}>
-          {fields.map(({ label, key, type, placeholder }) => (
-            <div key={key} style={{ marginBottom: '16px' }}>
-              <label style={{ color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px' }}>{label}</label>
-              <input type={type} placeholder={placeholder} required value={form[key]}
-                onChange={(e) => setForm({ ...form, [key]: e.target.value })} style={inputStyle} />
-            </div>
-          ))}
-          <button type="submit" disabled={loading} style={{ width: '100%', padding: '13px', borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #4361ee, #7209b7)', color: '#fff', fontWeight: 600, fontSize: '15px', cursor: 'pointer', marginTop: '8px' }}>
-            {loading ? 'Creating...' : 'Create Account'}
-          </button>
-        </form>
-        <p style={{ textAlign: 'center', marginTop: '24px', color: '#94a3b8', fontSize: '14px' }}>
+
+        <div className="card card-lg" style={{ boxShadow: 'var(--shadow-lg)' }}>
+          <form onSubmit={handleSubmit}>
+            {FIELDS.map(({ label, key, type, placeholder, icon }) => (
+              <div key={key} style={{ marginBottom: 16 }}>
+                <label className="field-label">{label}</label>
+                <div style={{ position: 'relative' }}>
+                  <i className={icon} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)', fontSize: 12, pointerEvents: 'none' }} />
+                  <input type={type} placeholder={placeholder} required value={form[key]}
+                    onChange={e => setForm({ ...form, [key]: e.target.value })}
+                    className="fin-input" style={{ paddingLeft: 40 }} />
+                </div>
+              </div>
+            ))}
+            <button type="submit" disabled={loading} className="btn btn-primary btn-lg btn-full" style={{ marginTop: 12 }}>
+              {loading ? <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />Creating...</> : 'Create Account'}
+            </button>
+          </form>
+        </div>
+
+        <p className="t-body" style={{ textAlign: 'center', marginTop: 20 }}>
           Already have an account?{' '}
-          <Link to="/login" style={{ color: '#4cc9f0', textDecoration: 'none', fontWeight: 600 }}>Sign in</Link>
+          <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>Sign in →</Link>
         </p>
       </div>
     </div>

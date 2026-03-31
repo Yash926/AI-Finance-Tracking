@@ -3,16 +3,14 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import { getBudgetWithStatus, setBudget } from '../services/budgetService';
 
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const EXPENSE_CATS = ['Food','Transport','Shopping','Entertainment','Health','Education','Utilities','Rent','Travel','Other Expense'];
-
-const cardStyle = { background: 'linear-gradient(135deg, #16213e 0%, #1a1a2e 100%)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px' };
-const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: '8px', background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.12)', color: '#e2e8f0', fontSize: '14px', outline: 'none' };
+const MO = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CATS = ['Food','Transport','Shopping','Entertainment','Health','Education','Utilities','Rent','Travel','Other Expense'];
+const ICONS = { Food:'🍔',Transport:'🚗',Shopping:'🛍️',Entertainment:'🎬',Health:'💊',Education:'📚',Utilities:'💡',Rent:'🏠',Travel:'✈️','Other Expense':'📦' };
 
 export default function Budget() {
   const { user } = useAuth();
-  const [month, setMonth]         = useState(new Date().getMonth() + 1);
-  const [year, setYear]           = useState(new Date().getFullYear());
+  const [month, setMonth]           = useState(new Date().getMonth() + 1);
+  const [year, setYear]             = useState(new Date().getFullYear());
   const [budgetData, setBudgetData] = useState(null);
   const [totalLimit, setTotalLimit] = useState('');
   const [catLimits, setCatLimits]   = useState({});
@@ -28,130 +26,147 @@ export default function Budget() {
         const cl = {};
         data.budget.categoryLimits?.forEach(({ category, limit }) => { cl[category] = limit; });
         setCatLimits(cl);
-      } else {
-        setTotalLimit(''); setCatLimits({});
-      }
+      } else { setTotalLimit(''); setCatLimits({}); }
     } catch (_) {}
   };
 
-  useEffect(() => { fetchBudget(); }, [month, year, user]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchBudget(); }, [month, year, user]); // eslint-disable-line
 
   const handleSave = async (e) => {
     e.preventDefault();
     if (!totalLimit) return toast.error('Total limit is required');
     setLoading(true);
     try {
-      const categoryLimits = Object.entries(catLimits)
-        .filter(([, v]) => v > 0)
-        .map(([category, limit]) => ({ category, limit: parseFloat(limit) }));
+      const categoryLimits = Object.entries(catLimits).filter(([,v]) => v > 0).map(([category, limit]) => ({ category, limit: parseFloat(limit) }));
       await setBudget(user.uid, { month, year, totalLimit, categoryLimits });
       toast.success('Budget saved!');
       fetchBudget();
-    } catch (err) {
-      toast.error(err.message || 'Failed to save budget');
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) { toast.error(err.message || 'Failed to save budget'); }
+    finally { setLoading(false); }
   };
 
-  const pct = budgetData?.percentUsed ? parseFloat(budgetData.percentUsed) : 0;
-  const barColor = pct >= 100 ? '#ef233c' : pct >= 80 ? '#f8961e' : '#4361ee';
+  const pct = parseFloat(budgetData?.percentUsed || 0);
+  const barColor = pct >= 100 ? 'var(--danger)' : pct >= 80 ? 'var(--warning)' : 'var(--primary)';
 
   return (
-    <div>
-      <div style={{ marginBottom: '24px' }}>
-        <h4 style={{ color: '#e2e8f0', fontWeight: 700, margin: 0 }}>Budget Manager</h4>
-        <p style={{ color: '#94a3b8', fontSize: '14px', margin: 0 }}>Set and track monthly spending limits</p>
+    <div className="anim-fade-up">
+      <div className="page-header" style={{ marginBottom: 24 }}>
+        <div>
+          <h1 className="t-title" style={{ fontSize: '1.375rem', marginBottom: 4 }}>Budget Manager</h1>
+          <p className="t-small">Set and track your monthly spending limits</p>
+        </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '20px' }}>
+      {budgetData?.alerts?.map((a, i) => (
+        <div key={i} className={`alert alert-${a.type}`}>
+          <i className={`fas fa-${a.type === 'danger' ? 'circle-exclamation' : 'triangle-exclamation'}`} />
+          {a.message}
+        </div>
+      ))}
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 20 }}>
         {/* Form */}
-        <div style={cardStyle}>
-          <h6 style={{ color: '#e2e8f0', fontWeight: 600, marginBottom: '20px' }}>
-            <i className="fas fa-wallet" style={{ color: '#4361ee', marginRight: '8px' }} />Set Budget
-          </h6>
+        <div className="card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
+            <div className="icon-box icon-box-sm" style={{ background: 'var(--primary-dim)', border: '1px solid var(--primary-border)' }}>
+              <i className="fas fa-wallet" style={{ color: 'var(--primary)', fontSize: 12 }} />
+            </div>
+            <span className="t-heading">Set Budget</span>
+          </div>
+
           <form onSubmit={handleSave}>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-              <select value={month} onChange={(e) => setMonth(parseInt(e.target.value))} style={{ ...inputStyle, flex: 1 }}>
-                {MONTHS.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+              <select value={month} onChange={e => setMonth(parseInt(e.target.value))} className="fin-input" style={{ flex: 1 }}>
+                {MO.map((m,i) => <option key={i} value={i+1}>{m}</option>)}
               </select>
-              <select value={year} onChange={(e) => setYear(parseInt(e.target.value))} style={{ ...inputStyle, flex: 1 }}>
-                {[2023, 2024, 2025, 2026].map((y) => <option key={y} value={y}>{y}</option>)}
+              <select value={year} onChange={e => setYear(parseInt(e.target.value))} className="fin-input" style={{ flex: 1 }}>
+                {[2023,2024,2025,2026].map(y => <option key={y} value={y}>{y}</option>)}
               </select>
             </div>
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ color: '#94a3b8', fontSize: '12px', display: 'block', marginBottom: '6px' }}>Total Monthly Limit (₹)</label>
-              <input type="number" style={inputStyle} min="1" placeholder="e.g. 50000" value={totalLimit} onChange={(e) => setTotalLimit(e.target.value)} required />
+
+            <div style={{ marginBottom: 18 }}>
+              <label className="field-label">Total Monthly Limit (₹)</label>
+              <input type="number" className="fin-input" min="1" placeholder="e.g. 50,000" value={totalLimit} onChange={e => setTotalLimit(e.target.value)} required />
             </div>
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ color: '#94a3b8', fontSize: '12px', display: 'block', marginBottom: '10px' }}>Category Limits (optional)</label>
-              {EXPENSE_CATS.map((cat) => (
-                <div key={cat} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '13px', flex: 1 }}>{cat}</span>
-                  <input type="number" min="0" placeholder="₹ limit" value={catLimits[cat] || ''}
-                    onChange={(e) => setCatLimits((p) => ({ ...p, [cat]: e.target.value }))}
-                    style={{ ...inputStyle, width: '110px', padding: '7px 10px' }} />
-                </div>
-              ))}
+
+            <div style={{ marginBottom: 22 }}>
+              <label className="field-label" style={{ marginBottom: 12 }}>Category Limits (optional)</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {CATS.map(cat => (
+                  <div key={cat} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: 15, width: 20, textAlign: 'center', flexShrink: 0 }}>{ICONS[cat]}</span>
+                    <span className="t-body" style={{ flex: 1, fontSize: 13 }}>{cat}</span>
+                    <input type="number" min="0" placeholder="₹" value={catLimits[cat] || ''}
+                      onChange={e => setCatLimits(p => ({ ...p, [cat]: e.target.value }))}
+                      className="fin-input" style={{ width: 90, padding: '7px 10px', fontSize: 13 }} />
+                  </div>
+                ))}
+              </div>
             </div>
-            <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: 'none', background: 'linear-gradient(135deg,#4361ee,#7209b7)', color: '#fff', fontWeight: 600, cursor: 'pointer' }}>
-              {loading ? 'Saving...' : 'Save Budget'}
+
+            <button type="submit" disabled={loading} className="btn btn-primary btn-full" style={{ padding: '12px' }}>
+              {loading ? <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />Saving...</> : 'Save Budget'}
             </button>
           </form>
         </div>
 
         {/* Status */}
         <div>
-          {budgetData?.alerts?.map((a, i) => (
-            <div key={i} style={{ padding: '12px 16px', borderRadius: '10px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px', background: a.type === 'danger' ? 'rgba(239,35,60,0.1)' : 'rgba(248,150,30,0.1)', border: `1px solid ${a.type === 'danger' ? 'rgba(239,35,60,0.3)' : 'rgba(248,150,30,0.3)'}`, color: a.type === 'danger' ? '#ef233c' : '#f8961e' }}>
-              <i className={`fas fa-${a.type === 'danger' ? 'exclamation-circle' : 'exclamation-triangle'}`} />
-              {a.message}
-            </div>
-          ))}
-
           {budgetData?.budget ? (
-            <div style={cardStyle}>
-              <h6 style={{ color: '#e2e8f0', fontWeight: 600, marginBottom: '20px' }}>
-                <i className="fas fa-chart-bar" style={{ color: '#4361ee', marginRight: '8px' }} />
-                Budget Status — {MONTHS[month - 1]} {year}
-              </h6>
-              <div style={{ marginBottom: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '14px' }}>Total Spent</span>
-                  <span style={{ color: '#e2e8f0', fontWeight: 600 }}>₹{budgetData.totalSpent?.toFixed(2)} / ₹{budgetData.budget.totalLimit}</span>
+            <div className="card">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
+                <div className="icon-box icon-box-sm" style={{ background: 'var(--primary-dim)', border: '1px solid var(--primary-border)' }}>
+                  <i className="fas fa-chart-bar" style={{ color: 'var(--primary)', fontSize: 12 }} />
                 </div>
-                <div style={{ height: '10px', borderRadius: '5px', background: 'rgba(255,255,255,0.06)' }}>
-                  <div style={{ height: '100%', borderRadius: '5px', width: `${Math.min(pct, 100)}%`, background: barColor, transition: 'width 0.5s' }} />
-                </div>
-                <p style={{ color: barColor, fontSize: '13px', marginTop: '6px' }}>{pct}% of budget used</p>
+                <span className="t-heading">{MO[month-1]} {year} — Status</span>
               </div>
+
+              {/* Overall */}
+              <div style={{ padding: 16, borderRadius: 12, background: 'var(--bg-surface)', border: '1px solid var(--border-2)', marginBottom: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+                  <span className="t-body" style={{ fontSize: 13 }}>Total Spent</span>
+                  <span style={{ color: 'var(--text-1)', fontWeight: 700, fontSize: 14 }}>
+                    ₹{budgetData.totalSpent?.toFixed(0)} <span className="t-small">/ ₹{budgetData.budget.totalLimit}</span>
+                  </span>
+                </div>
+                <div className="progress-track progress-track-lg">
+                  <div className="progress-fill" style={{ width: `${Math.min(pct,100)}%`, background: barColor }} />
+                </div>
+                <p style={{ color: barColor, fontSize: 13, marginTop: 8, fontWeight: 600 }}>{pct}% of budget used</p>
+              </div>
+
+              {/* Categories */}
               {budgetData.budget.categoryLimits?.length > 0 && (
-                <>
-                  <h6 style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Category Breakdown</h6>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <p className="t-label">Category Breakdown</p>
                   {budgetData.budget.categoryLimits.map(({ category, limit }) => {
                     const spent = budgetData.categorySpend?.[category] || 0;
                     const cp = Math.min((spent / limit) * 100, 100);
-                    const cc = cp >= 100 ? '#ef233c' : cp >= 80 ? '#f8961e' : '#2dc653';
+                    const cc = cp >= 100 ? 'var(--danger)' : cp >= 80 ? 'var(--warning)' : 'var(--success)';
                     return (
-                      <div key={category} style={{ marginBottom: '14px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                          <span style={{ color: '#e2e8f0', fontSize: '13px' }}>{category}</span>
-                          <span style={{ color: '#94a3b8', fontSize: '12px' }}>₹{spent.toFixed(2)} / ₹{limit}</span>
+                      <div key={category}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                          <span className="t-body" style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}>
+                            {ICONS[category]} {category}
+                          </span>
+                          <span className="t-small">₹{spent.toFixed(0)} / ₹{limit}</span>
                         </div>
-                        <div style={{ height: '6px', borderRadius: '3px', background: 'rgba(255,255,255,0.06)' }}>
-                          <div style={{ height: '100%', borderRadius: '3px', width: `${cp}%`, background: cc, transition: 'width 0.5s' }} />
+                        <div className="progress-track">
+                          <div className="progress-fill" style={{ width: `${cp}%`, background: cc }} />
                         </div>
                       </div>
                     );
                   })}
-                </>
+                </div>
               )}
             </div>
           ) : (
-            <div style={{ ...cardStyle, textAlign: 'center', padding: '48px' }}>
-              <i className="fas fa-wallet" style={{ fontSize: '48px', color: '#4361ee', marginBottom: '16px', opacity: 0.4 }} />
-              <h6 style={{ color: '#e2e8f0' }}>No Budget Set</h6>
-              <p style={{ color: '#94a3b8', fontSize: '14px' }}>Set a budget for {MONTHS[month - 1]} {year} to track your spending.</p>
+            <div className="card">
+              <div className="empty-state">
+                <div className="empty-icon"><i className="fas fa-wallet" style={{ color: 'var(--primary)', fontSize: 22 }} /></div>
+                <p className="t-heading">No Budget Set</p>
+                <p className="t-small">Set a budget for {MO[month-1]} {year} to start tracking.</p>
+              </div>
             </div>
           )}
         </div>

@@ -1,104 +1,125 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
-const navItems = [
-  { to: '/',             icon: 'fas fa-tachometer-alt', label: 'Dashboard'    },
-  { to: '/transactions', icon: 'fas fa-exchange-alt',   label: 'Transactions' },
-  { to: '/budget',       icon: 'fas fa-wallet',         label: 'Budget'       },
-  { to: '/insights',     icon: 'fas fa-robot',          label: 'AI Insights'  },
+const NAV = [
+  { to: '/',             icon: 'fas fa-chart-pie',    label: 'Dashboard'    },
+  { to: '/transactions', icon: 'fas fa-arrows-alt-h', label: 'Transactions' },
+  { to: '/budget',       icon: 'fas fa-wallet',       label: 'Budget'       },
+  { to: '/insights',     icon: 'fas fa-robot',        label: 'AI Insights'  },
 ];
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const { theme, toggle } = useTheme();
   const navigate = useNavigate();
 
-  const handleLogout = () => { logout(); navigate('/login'); };
+  const initials = user?.name
+    ? user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+    : '?';
 
   return (
-    <div style={{
-      width: '250px', position: 'fixed', top: 0, left: 0, height: '100vh',
-      background: 'linear-gradient(180deg, #0f3460 0%, #16213e 100%)',
-      display: 'flex', flexDirection: 'column', padding: '0',
-      borderRight: '1px solid rgba(255,255,255,0.08)', zIndex: 100,
+    <aside style={{
+      width: 260, position: 'fixed', top: 0, left: 0, height: '100vh',
+      background: 'var(--sidebar-bg)',
+      borderRight: '1px solid var(--sidebar-border)',
+      display: 'flex', flexDirection: 'column',
+      zIndex: 100,
     }}>
+
       {/* Logo */}
-      <div style={{ padding: '24px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid var(--sidebar-border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
-            width: 40, height: 40, borderRadius: '10px',
-            background: 'linear-gradient(135deg, #4361ee, #7209b7)',
+            width: 38, height: 38, borderRadius: 10, flexShrink: 0,
+            background: 'linear-gradient(135deg, #635bff, #8b5cf6)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(99,91,255,0.35)',
           }}>
-            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: '18px' }} />
+            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 15 }} />
           </div>
           <div>
-            <div style={{ color: '#fff', fontWeight: 700, fontSize: '18px', lineHeight: 1 }}>FinSmart</div>
-            <div style={{ color: '#4cc9f0', fontSize: '11px', letterSpacing: '1px' }}>AI FINANCE</div>
+            <div style={{ color: '#fff', fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em', lineHeight: 1 }}>FinSmart</div>
+            <div style={{ color: 'rgba(99,91,255,0.8)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', marginTop: 2 }}>AI FINANCE</div>
           </div>
         </div>
       </div>
 
-      {/* User Badge */}
+      {/* User */}
       {user && (
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--sidebar-border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
-              width: 36, height: 36, borderRadius: '50%',
-              background: 'linear-gradient(135deg, #4361ee, #7209b7)',
+              width: 34, height: 34, borderRadius: 9, flexShrink: 0,
+              background: 'linear-gradient(135deg, #635bff, #8b5cf6)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontWeight: 700, fontSize: '14px',
+              color: '#fff', fontWeight: 700, fontSize: 12,
             }}>
-              {user.name?.charAt(0).toUpperCase()}
+              {initials}
             </div>
-            <div>
-              <div style={{ color: '#e2e8f0', fontWeight: 600, fontSize: '13px' }}>{user.name}</div>
-              <div style={{ color: '#94a3b8', fontSize: '11px' }}>{user.email}</div>
+            <div style={{ overflow: 'hidden', flex: 1 }}>
+              <div style={{ color: '#fff', fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</div>
+              <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</div>
             </div>
           </div>
         </div>
       )}
 
       {/* Nav */}
-      <nav style={{ flex: 1, padding: '16px 12px' }}>
-        {navItems.map(({ to, icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
+      <nav style={{ flex: 1, padding: '12px 12px', overflowY: 'auto' }}>
+        <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '4px 8px 10px' }}>
+          Menu
+        </div>
+        {NAV.map(({ to, icon, label }) => (
+          <NavLink key={to} to={to} end={to === '/'}
             style={({ isActive }) => ({
-              display: 'flex', alignItems: 'center', gap: '12px',
-              padding: '12px 16px', borderRadius: '10px', marginBottom: '4px',
-              textDecoration: 'none', transition: 'all 0.2s',
-              background: isActive ? 'rgba(67,97,238,0.3)' : 'transparent',
-              color: isActive ? '#4cc9f0' : '#94a3b8',
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '10px 12px', borderRadius: 10, marginBottom: 2,
+              textDecoration: 'none',
+              background: isActive ? 'var(--sidebar-active)' : 'transparent',
+              color: isActive ? '#a5b4fc' : 'rgba(255,255,255,0.4)',
               fontWeight: isActive ? 600 : 400,
-              borderLeft: isActive ? '3px solid #4361ee' : '3px solid transparent',
+              fontSize: 13.5,
+              border: `1px solid ${isActive ? 'rgba(99,91,255,0.2)' : 'transparent'}`,
+              transition: 'all 0.15s',
             })}
+            onMouseEnter={e => { if (!e.currentTarget.classList.contains('active')) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+            onMouseLeave={e => { if (!e.currentTarget.classList.contains('active')) e.currentTarget.style.background = 'transparent'; }}
           >
-            <i className={icon} style={{ width: 18, textAlign: 'center' }} />
-            <span style={{ fontSize: '14px' }}>{label}</span>
+            {({ isActive }) => (
+              <>
+                <div style={{
+                  width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: isActive ? 'rgba(99,91,255,0.2)' : 'rgba(255,255,255,0.05)',
+                  transition: 'all 0.15s',
+                }}>
+                  <i className={icon} style={{ fontSize: 12, color: isActive ? '#818cf8' : 'rgba(255,255,255,0.35)' }} />
+                </div>
+                <span style={{ flex: 1 }}>{label}</span>
+                {isActive && (
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#635bff', flexShrink: 0 }} />
+                )}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      {/* Logout */}
-      <div style={{ padding: '16px 12px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-        <button
-          onClick={handleLogout}
-          style={{
-            width: '100%', padding: '11px 16px', borderRadius: '10px',
-            background: 'rgba(239,35,60,0.1)', border: '1px solid rgba(239,35,60,0.3)',
-            color: '#ef233c', cursor: 'pointer', display: 'flex', alignItems: 'center',
-            gap: '10px', fontSize: '14px', fontWeight: 500, transition: 'all 0.2s',
-          }}
-          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239,35,60,0.2)'}
-          onMouseOut={(e) => e.currentTarget.style.background = 'rgba(239,35,60,0.1)'}
-        >
-          <i className="fas fa-sign-out-alt" />
-          Logout
+      {/* Bottom */}
+      <div style={{ padding: '12px', borderTop: '1px solid var(--sidebar-border)' }}>
+        <button onClick={toggle} className="theme-toggle">
+          <i className={`fas fa-${theme === 'dark' ? 'sun' : 'moon'}`} style={{ fontSize: 12 }} />
+          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+        </button>
+        <button onClick={() => { logout(); navigate('/login'); }}
+          className="btn btn-ghost btn-full"
+          style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', borderColor: 'rgba(255,255,255,0.08)', justifyContent: 'flex-start', gap: 10 }}>
+          <i className="fas fa-sign-out-alt" style={{ fontSize: 12 }} />
+          Sign Out
         </button>
       </div>
-    </div>
+    </aside>
   );
 }
