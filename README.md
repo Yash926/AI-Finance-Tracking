@@ -1,16 +1,16 @@
 <div align="center">
 
-# 💰 FinSmart AI
+# 💚 FinSmart AI
 ### Intelligent Personal Finance Assistant
 
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![Gemini](https://img.shields.io/badge/Gemini_2.0-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 
-An AI-powered full-stack MERN application that tracks income & expenses, visualises spending patterns, and generates intelligent financial insights via the Gemini API.
+A full-stack AI-powered personal finance tracker built with React, Firebase, and Google Gemini. Track income & expenses, visualise spending patterns, set budgets, chat with an AI advisor, and get ML-powered expense predictions.
 
-[Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [API Reference](#-api-reference) • [Future Scope](#-future-scope)
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [Deployment](#-deployment) • [Project Structure](#-project-structure)
 
 </div>
 
@@ -20,49 +20,61 @@ An AI-powered full-stack MERN application that tracks income & expenses, visuali
 
 | Category | Details |
 |---|---|
-| 🔐 **Auth** | JWT-based Register / Login with protected routes |
-| 💳 **Transactions** | Add / Edit / Delete income & expense transactions |
-| 🗂️ **Categories** | 15 pre-defined categories with date filtering |
-| 📊 **Dashboard** | Balance cards, doughnut & line charts, monthly summary |
-| 🤖 **AI Insights** | Gemini-powered personalised financial advice |
-| 🚨 **Budget Alerts** | Set monthly limits; warning at 80 %, danger at 100 % |
-| 🌐 **REST API** | Secure, rate-limited Express API |
-| 📱 **Responsive UI** | Dark-theme dashboard with sidebar navigation |
+| 🔐 **Auth** | Firebase Authentication — Email/Password register & login |
+| 💳 **Transactions** | Add / Edit / Delete income & expense transactions with 15 categories |
+| 📊 **Dashboard** | Stat cards, doughnut chart, income vs expense line chart, recent transactions |
+| 🎯 **Budget Manager** | Set monthly total & per-category limits with 80% / 100% alerts |
+| 🤖 **AI Insights** | Gemini 2.0 Flash — personalised monthly financial analysis |
+| 💬 **AI Chatbot** | Conversational financial advisor with your transaction data as context |
+| 📈 **ML Predictions** | Linear regression on past spending to predict next month's expenses per category |
+| 🌗 **Dark / Light Mode** | Full theme toggle persisted to localStorage |
+| 🚀 **Deployed** | Frontend on Vercel · Backend on Render |
 
 ---
 
-## 🧠 AI Capabilities
+## 🧠 AI & ML Capabilities
 
-- **Insight Generator** — Powered by Google Gemini 1.5 Flash with structured prompt engineering
-- **Trend Analysis** — Month-over-month spending trend detection
-- **Personalised Advice** — Insights tailored to each user's transaction history
-- **Graceful Fallback** — Rule-based insights when the API key is not configured
+### AI Insights (Gemini 2.0 Flash)
+- Monthly financial health assessment with actionable bullet points
+- Month-over-month spending trend detection
+- Savings rate analysis and personalised recommendations
+- Graceful fallback to rule-based insights when API key is not configured
 
-**Example AI Insight:**
-> *"Your Food expenses account for 35% of total spending this month. Reducing dining expenses can help you stay within budget and improve your savings rate."*
+### AI Chatbot
+- Conversational interface powered by Gemini with multi-turn chat history
+- Full financial context injected — summary, top categories, recent transactions
+- Quick-prompt suggestions for common questions
+- Typing indicator and smooth chat UX
+
+### ML Expense Predictions
+- **Linear regression** computed server-side on monthly spending history
+- Predicts next month's total income, expense, and per-category breakdown
+- Shows trend direction (increasing / decreasing) and comparison vs last month
+- Gemini narrates the predictions with actionable interpretation
+- Requires minimum 2 months of data; accuracy improves with more history
 
 ---
 
 ## 🏗️ Tech Stack
 
 ### Frontend
-![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+![React](https://img.shields.io/badge/React_19-61DAFB?style=flat&logo=react&logoColor=black)
+![Firebase](https://img.shields.io/badge/Firebase_SDK-FFCA28?style=flat&logo=firebase&logoColor=black)
 ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat&logo=chartdotjs&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=flat&logo=bootstrap&logoColor=white)
 ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router_v7-CA4245?style=flat&logo=reactrouter&logoColor=white)
 
 ### Backend
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white)
-![dotenv](https://img.shields.io/badge/dotenv-ECD53F?style=flat&logo=dotenv&logoColor=black)
+![Firebase Admin](https://img.shields.io/badge/Firebase_Admin-FFCA28?style=flat&logo=firebase&logoColor=black)
 
-### Database
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
-![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=flat&logo=mongoose&logoColor=white)
+### Database & Auth
+![Firestore](https://img.shields.io/badge/Firestore-FFCA28?style=flat&logo=firebase&logoColor=black)
+![Firebase Auth](https://img.shields.io/badge/Firebase_Auth-FFCA28?style=flat&logo=firebase&logoColor=black)
 
 ### AI
-![Gemini](https://img.shields.io/badge/Gemini_API-4285F4?style=flat&logo=google&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini_2.0_Flash-4285F4?style=flat&logo=google&logoColor=white)
 
 ---
 
@@ -71,26 +83,37 @@ An AI-powered full-stack MERN application that tracks income & expenses, visuali
 ```
 AI-Finance-Tracking/
 │
-├── frontend/               # React UI
+├── frontend/                        # React 19 app
+│   ├── public/
+│   │   ├── index.html               # Title, favicon, meta tags
+│   │   └── manifest.json            # PWA manifest
 │   ├── src/
-│   │   ├── components/     # Sidebar, StatCard, TransactionForm
-│   │   ├── context/        # AuthContext (JWT state)
-│   │   ├── pages/          # Dashboard, Transactions, Budget, Insights, Login, Register
-│   │   └── utils/          # Axios instance with interceptors
-│   └── package.json
+│   │   ├── components/
+│   │   │   ├── Sidebar.jsx          # Navigation with theme toggle
+│   │   │   ├── StatCard.jsx         # Animated metric cards
+│   │   │   └── TransactionForm.jsx  # Add/edit transaction modal
+│   │   ├── context/
+│   │   │   ├── AuthContext.js       # Firebase Auth state
+│   │   │   └── ThemeContext.js      # Dark/light theme
+│   │   ├── pages/
+│   │   │   ├── Dashboard.jsx        # Overview with charts
+│   │   │   ├── Transactions.jsx     # Full transaction list + filters
+│   │   │   ├── Budget.jsx           # Monthly budget manager
+│   │   │   ├── Insights.jsx         # AI insights + chatbot + predictions
+│   │   │   ├── Login.jsx            # Split-screen auth page
+│   │   │   └── Register.jsx         # Registration page
+│   │   ├── services/
+│   │   │   ├── transactionService.js # Firestore CRUD + client-side filtering
+│   │   │   └── budgetService.js      # Budget Firestore operations
+│   │   ├── firebase.js              # Firebase app init
+│   │   └── index.css                # Design system (CSS variables, dark/light)
+│   ├── .env.example                 # Environment variable template
+│   └── vercel.json                  # React Router SPA rewrite rule
 │
-├── backend/                # Node.js + Express API
-│   ├── controllers/        # Business logic per resource
-│   ├── middleware/         # JWT auth middleware + rate limiter
-│   ├── models/             # Mongoose schemas (User, Transaction, Budget)
-│   ├── routes/             # Express routers
-│   ├── utils/              # Gemini AI helper
-│   └── server.js
+├── backend/                         # Minimal Express AI server
+│   └── server.js                    # /api/ai/insights, /api/ai/chat, /api/ai/predict
 │
-├── docs/
-│   ├── API.md                            # Full API reference
-│   └── FinSmart-AI.postman_collection.json  # Import into Postman
-│
+├── firestore.rules                  # Firestore security rules
 └── README.md
 ```
 
@@ -100,103 +123,119 @@ AI-Finance-Tracking/
 
 ### Prerequisites
 
-- Node.js ≥ 16.x
-- MongoDB (local or Atlas)
-- Google Gemini API Key *(optional — falls back to mock insights)*
+- Node.js ≥ 18.x
+- Firebase project (Firestore + Authentication enabled)
+- Google Gemini API Key *(optional — falls back to rule-based insights)*
 
-### 1. Clone the Repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/Yash926/AI-Finance-Tracking.git
 cd AI-Finance-Tracking
 ```
 
-### 2. Backend Setup
+### 2. Firebase Setup
 
-```bash
-cd backend
-cp .env.example .env        # fill in MONGO_URI, JWT_SECRET, GEMINI_API_KEY
-npm install
-npm run dev                 # starts on http://localhost:5000
-```
-
-**.env variables**
-
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/finsmart
-JWT_SECRET=your_super_secret_jwt_key
-GEMINI_API_KEY=your_gemini_api_key   # leave blank for mock insights
-NODE_ENV=development
-```
+1. Create a project at [console.firebase.google.com](https://console.firebase.google.com)
+2. Enable **Authentication → Email/Password**
+3. Enable **Firestore Database** (production mode)
+4. Apply security rules from `firestore.rules`
+5. Get your web app config from **Project Settings → Your apps**
+6. Generate a service account key from **Project Settings → Service Accounts**
 
 ### 3. Frontend Setup
 
 ```bash
 cd frontend
+cp .env.example .env   # fill in your Firebase config values
 npm install
-npm start                   # starts on http://localhost:3000
+npm start              # http://localhost:3000
 ```
 
-### 4. Postman Testing
-
-Import `docs/FinSmart-AI.postman_collection.json` into Postman.  
-The Register and Login requests auto-save the JWT to the `token` collection variable so all subsequent requests are authenticated automatically.
-
----
-
-## 📊 System Workflow
-
-```
-User Login / Register
-        │
-        ▼
-  Add Transactions
-        │
-        ▼
-  MongoDB Storage
-        │
-   ┌────┴────┐
-   ▼         ▼
-Dashboard  AI Insights
-(Charts)  (Gemini API)
-   │         │
-   └────┬────┘
-        ▼
-  Budget Alerts
+**`frontend/.env`**
+```env
+REACT_APP_FIREBASE_API_KEY=
+REACT_APP_FIREBASE_AUTH_DOMAIN=
+REACT_APP_FIREBASE_PROJECT_ID=
+REACT_APP_FIREBASE_STORAGE_BUCKET=
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
+REACT_APP_FIREBASE_APP_ID=
+REACT_APP_AI_API_URL=http://localhost:5000
 ```
 
----
+### 4. Backend Setup
 
-## 🔄 Development Methodology
+```bash
+cd backend
+npm install
+npm run dev            # http://localhost:5000
+```
 
-- **Agile** development workflow
-- **REST API** architecture with modular controllers / routes / models
-- **Version control** using Git & GitHub
-- **API testing** using Postman (collection included in `docs/`)
-- **Environment management** using dotenv
-
----
-
-## 🎯 Project Objective
-
-This project demonstrates how **Artificial Intelligence** can be integrated into a full-stack MERN application to build an intelligent financial decision support system — similar to enterprise solutions developed at companies like Accenture and similar tech firms.
-
----
-
-## 🔭 Future Scope
-
-- [ ] Bank API integration (Plaid / Razorpay)
-- [ ] Mobile app (React Native)
-- [ ] Voice assistant integration
-- [ ] Multi-user analytics & admin panel
-- [ ] Cloud deployment (AWS / Azure / GCP)
+**`backend/.env`**
+```env
+PORT=5000
+CLIENT_URL=http://localhost:3000
+GEMINI_API_KEY=your_gemini_api_key
+FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # minified JSON
+```
 
 ---
 
-## 📖 API Reference
+## 🌐 Deployment
 
-See [`docs/API.md`](docs/API.md) for the complete endpoint reference, or import the Postman collection from [`docs/FinSmart-AI.postman_collection.json`](docs/FinSmart-AI.postman_collection.json).
+### Frontend → Vercel
+
+1. Import repo on [vercel.com](https://vercel.com)
+2. Set **Root Directory** to `frontend`
+3. Add all `REACT_APP_*` environment variables
+4. Deploy — `vercel.json` handles React Router rewrites automatically
+
+### Backend → Render
+
+1. New Web Service on [render.com](https://render.com)
+2. **Root Directory**: `backend`
+3. **Build Command**: `npm install`
+4. **Start Command**: `node server.js`
+5. Add `GEMINI_API_KEY`, `FIREBASE_SERVICE_ACCOUNT`, `CLIENT_URL` env vars
+
+### After deploying both
+
+- Add your Vercel URL to **Firebase Console → Authentication → Authorized domains**
+- Set `REACT_APP_AI_API_URL` in Vercel env vars to your Render URL and redeploy
+
+---
+
+## 🔄 System Workflow
+
+```
+User Login (Firebase Auth)
+        │
+        ▼
+  Add Transactions → Firestore (users/{uid}/transactions)
+        │
+        ▼
+  Dashboard fetches & aggregates client-side
+        │
+   ┌────┴──────────────┐
+   ▼                   ▼
+Charts & Stats     Budget Alerts
+                        │
+                        ▼
+              AI Insights Page
+              ┌─────┬──────┬──────────┐
+              │     │      │          │
+           Insights Chat  ML Predict  │
+           (Gemini)(Gemini)(Linear    │
+                          Regression) │
+                                      ▼
+                              Gemini Narration
+```
+
+---
+
+## 🔐 Firestore Security Rules
+
+Data is stored per user under `users/{uid}/transactions` and `budgets/{uid}_{year}_{month}`. Security rules ensure users can only read and write their own data. See `firestore.rules` for the full ruleset.
 
 ---
 
