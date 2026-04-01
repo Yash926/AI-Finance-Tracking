@@ -35,7 +35,7 @@ export default function Login() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--auth-bg)' }}>
       {/* Left branding panel */}
-      <div style={{
+      <div className="login-left" style={{
         flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
         padding: '60px 64px', position: 'relative', overflow: 'hidden',
         background: 'linear-gradient(160deg, #0f0f23 0%, #13132b 60%, #07080f 100%)',

@@ -64,7 +64,7 @@ export default function Budget() {
         </div>
       ))}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 20 }}>
+      <div className="budget-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 20 }}>
         {/* Form */}
         <div className="card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>

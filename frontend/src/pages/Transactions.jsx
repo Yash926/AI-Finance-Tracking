@@ -60,7 +60,7 @@ export default function Transactions() {
       </div>
 
       {/* Summary strip */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 20 }}>
+      <div className="summary-strip" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 20 }}>
         {[
           { label: 'Income',  value: `₹${totalIncome.toLocaleString('en-IN',{minimumFractionDigits:2})}`,  color: 'var(--success)', icon: 'fas fa-arrow-up' },
           { label: 'Expense', value: `₹${totalExpense.toLocaleString('en-IN',{minimumFractionDigits:2})}`, color: 'var(--danger)',  icon: 'fas fa-arrow-down' },
@@ -150,7 +150,7 @@ export default function Transactions() {
                     </td>
                     <td><span className={`badge badge-${tx.type}`}>{tx.type}</span></td>
                     <td style={{ color: 'var(--text-1)', fontWeight: 500 }}>{tx.category}</td>
-                    <td style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description || '—'}</td>
+                    <td className="hide-mobile" style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description || '—'}</td>
                     <td style={{ fontWeight: 700, color: tx.type === 'income' ? 'var(--success)' : 'var(--danger)', whiteSpace: 'nowrap' }}>
                       {tx.type === 'income' ? '+' : '-'}₹{tx.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </td>

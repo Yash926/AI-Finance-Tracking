@@ -119,7 +119,7 @@ export default function Dashboard() {
       ))}
 
       {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, marginBottom: 20 }}>
+      <div className="stat-cards-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, marginBottom: 20 }}>
         <StatCard title="Total Income"   value={`₹${(summary?.totalIncome||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-up"   color="#10b981" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="up" />
         <StatCard title="Total Expenses" value={`₹${(summary?.totalExpense||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-down" color="#f43f5e" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="down" />
         <StatCard title="Net Balance"    value={`₹${(summary?.netBalance||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}    icon="fas fa-balance-scale" color="#6366f1" subtitle="Income − Expenses" />
@@ -148,7 +148,7 @@ export default function Dashboard() {
       )}
 
       {/* Charts */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.7fr', gap: 16, marginBottom: 20 }}>
+      <div className="charts-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.7fr', gap: 16, marginBottom: 20 }}>
         <div className="card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18 }}>
             <div className="icon-box icon-box-sm" style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.2)' }}>

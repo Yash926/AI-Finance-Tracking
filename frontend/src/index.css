@@ -455,3 +455,53 @@ body {
 .anim-fade-up-2 { animation-delay: 0.12s; }
 .anim-fade-up-3 { animation-delay: 0.18s; }
 .anim-fade-up-4 { animation-delay: 0.24s; }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════ */
+
+/* Sidebar fixed positioning */
+.app-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  z-index: 100;
+  width: 260px;
+}
+
+@media (max-width: 1024px) {
+  /* Charts: stack on tablet */
+  .charts-grid { grid-template-columns: 1fr !important; }
+  /* Budget: stack */
+  .budget-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 768px) {
+  /* Stat cards: 2 columns */
+  .stat-cards-grid { grid-template-columns: 1fr 1fr !important; }
+  /* Summary strip: 1 column */
+  .summary-strip { grid-template-columns: 1fr !important; }
+  /* Charts: 1 column */
+  .charts-grid { grid-template-columns: 1fr !important; }
+  /* Budget: 1 column */
+  .budget-grid { grid-template-columns: 1fr !important; }
+  /* Login split: 1 column, hide left panel */
+  .login-left { display: none !important; }
+  .login-right { width: 100% !important; }
+  /* Page header: stack */
+  .page-header { flex-direction: column; align-items: flex-start; }
+  /* Insights tabs: scroll */
+  .insights-tabs { overflow-x: auto; }
+  /* Prediction cards: 1 col */
+  .pred-cards { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 480px) {
+  /* Stat cards: 1 column on very small */
+  .stat-cards-grid { grid-template-columns: 1fr !important; }
+  /* Card padding reduce */
+  .card { padding: 16px !important; }
+  .card-lg { padding: 20px !important; }
+  /* Table: hide description column */
+  .hide-mobile { display: none !important; }
+}

@@ -39,11 +39,19 @@ const TESTIMONIALS = [
 
 export default function Landing() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', fn);
     return () => window.removeEventListener('scroll', fn);
   }, []);
+
+  // Close menu on route change / scroll
+  useEffect(() => { if (menuOpen) setMenuOpen(false); }, [scrolled]); // eslint-disable-line
+
+  const navColor = scrolled ? '#374151' : 'rgba(255,255,255,0.85)';
+  const navHover = scrolled ? '#0891b2' : '#fff';
 
   return (
     <div style={{ fontFamily: "'Inter',-apple-system,sans-serif", overflowX: 'hidden', color: '#1e293b' }}>
@@ -51,34 +59,82 @@ export default function Landing() {
         *{box-sizing:border-box}
         @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-        @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
         a{transition:all .2s;text-decoration:none}
-        @media(max-width:900px){.hero-grid{grid-template-columns:1fr!important;text-align:center}.feat-grid{grid-template-columns:1fr 1fr!important}.ai-grid{grid-template-columns:1fr!important}.footer-grid{grid-template-columns:1fr 1fr!important}}
-        @media(max-width:600px){.feat-grid{grid-template-columns:1fr!important}.steps-grid{grid-template-columns:1fr!important}.testi-grid{grid-template-columns:1fr!important}.footer-grid{grid-template-columns:1fr!important}}
+        .nav-links a:hover,.nav-links button:hover{color:${navHover}!important}
+        @media(max-width:900px){
+          .hero-grid{grid-template-columns:1fr!important;text-align:center}
+          .feat-grid{grid-template-columns:1fr 1fr!important}
+          .footer-grid{grid-template-columns:1fr 1fr!important}
+          .nav-links{display:none!important}
+          .nav-hamburger{display:flex!important}
+        }
+        @media(max-width:600px){
+          .feat-grid{grid-template-columns:1fr!important}
+          .steps-grid{grid-template-columns:1fr!important}
+          .testi-grid{grid-template-columns:1fr!important}
+          .footer-grid{grid-template-columns:1fr!important}
+          .hero-mockup{display:none!important}
+        }
       `}</style>
 
       {/* ── NAVBAR ─────────────────────────────────────────── */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 60, padding: '0 5%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: scrolled ? 'rgba(255,255,255,0.95)' : 'transparent', backdropFilter: scrolled ? 'blur(20px)' : 'none', borderBottom: scrolled ? '1px solid rgba(8,145,178,0.12)' : 'none', transition: 'all .3s', boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.06)' : 'none' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 34, height: 34, borderRadius: 9, background: 'linear-gradient(135deg,#0891b2,#0e7490)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(8,145,178,.4)' }}>
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 60, padding: '0 5%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: scrolled ? 'rgba(255,255,255,0.97)' : 'transparent', backdropFilter: scrolled ? 'blur(20px)' : 'none', borderBottom: scrolled ? '1px solid rgba(8,145,178,0.12)' : 'none', transition: 'all .3s', boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.06)' : 'none' }}>
+        {/* Logo */}
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <div style={{ width: 34, height: 34, borderRadius: 9, background: 'linear-gradient(135deg,#0891b2,#0e7490)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(8,145,178,.4)', flexShrink: 0 }}>
             <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 13 }} />
           </div>
           <span style={{ fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em', color: scrolled ? '#0c2340' : '#fff' }}>FinSmart <span style={{ color: '#f97316' }}>AI</span></span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        </Link>
+
+        {/* Desktop nav links */}
+        <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           {['Features','Testimonials','Contact'].map(l => (
-            <a key={l} href={`#${l.toLowerCase()}`} style={{ padding: '6px 14px', fontSize: 13.5, fontWeight: 500, color: scrolled ? '#374151' : 'rgba(255,255,255,0.85)', borderRadius: 8 }}
-              onMouseEnter={e => e.target.style.color = scrolled ? '#0891b2' : '#fff'}
-              onMouseLeave={e => e.target.style.color = scrolled ? '#374151' : 'rgba(255,255,255,0.85)'}>{l}</a>
+            <a key={l} href={`#${l.toLowerCase()}`} style={{ padding: '6px 14px', fontSize: 13.5, fontWeight: 500, color: navColor, borderRadius: 8 }}
+              onMouseEnter={e => e.target.style.color = navHover}
+              onMouseLeave={e => e.target.style.color = navColor}>{l}</a>
           ))}
-          <Link to="/login" style={{ padding: '7px 16px', fontSize: 13.5, fontWeight: 500, color: scrolled ? '#374151' : 'rgba(255,255,255,0.85)', borderRadius: 8 }}
-            onMouseEnter={e => e.target.style.color = scrolled ? '#0891b2' : '#fff'}
-            onMouseLeave={e => e.target.style.color = scrolled ? '#374151' : 'rgba(255,255,255,0.85)'}>Sign In</Link>
-          <Link to="/register" style={{ padding: '8px 18px', borderRadius: 9, fontSize: 13.5, fontWeight: 700, background: '#f97316', color: '#fff', boxShadow: '0 3px 10px rgba(249,115,22,.35)' }}
+          <Link to="/login" style={{ padding: '7px 16px', fontSize: 13.5, fontWeight: 500, color: navColor, borderRadius: 8, marginLeft: 4 }}
+            onMouseEnter={e => e.target.style.color = navHover}
+            onMouseLeave={e => e.target.style.color = navColor}>Sign In</Link>
+          <Link to="/register" style={{ padding: '8px 18px', borderRadius: 9, fontSize: 13.5, fontWeight: 700, background: '#f97316', color: '#fff', boxShadow: '0 3px 10px rgba(249,115,22,.35)', marginLeft: 4 }}
             onMouseEnter={e => { e.currentTarget.style.background = '#ea6c0a'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
             onMouseLeave={e => { e.currentTarget.style.background = '#f97316'; e.currentTarget.style.transform = 'translateY(0)'; }}>Get Started</Link>
         </div>
+
+        {/* Hamburger — mobile only */}
+        <button className="nav-hamburger" onClick={() => setMenuOpen(o => !o)}
+          style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', padding: 6, flexDirection: 'column', gap: 5, alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: scrolled ? '#0c2340' : '#fff', transition: 'all .2s', transform: menuOpen ? 'rotate(45deg) translate(5px,5px)' : 'none' }} />
+          <span style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: scrolled ? '#0c2340' : '#fff', transition: 'all .2s', opacity: menuOpen ? 0 : 1 }} />
+          <span style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: scrolled ? '#0c2340' : '#fff', transition: 'all .2s', transform: menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : 'none' }} />
+        </button>
       </nav>
+
+      {/* Mobile dropdown menu */}
+      {menuOpen && (
+        <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(8,145,178,0.12)', padding: '16px 5% 20px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', animation: 'slideDown .2s ease' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {['Features','Testimonials','Contact'].map(l => (
+              <a key={l} href={`#${l.toLowerCase()}`} onClick={() => setMenuOpen(false)}
+                style={{ padding: '12px 16px', fontSize: 15, fontWeight: 500, color: '#374151', borderRadius: 10, display: 'block' }}
+                onMouseEnter={e => { e.target.style.background = '#f0f9ff'; e.target.style.color = '#0891b2'; }}
+                onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#374151'; }}>{l}</a>
+            ))}
+            <div style={{ height: 1, background: 'rgba(8,145,178,0.1)', margin: '8px 0' }} />
+            <Link to="/login" onClick={() => setMenuOpen(false)}
+              style={{ padding: '12px 16px', fontSize: 15, fontWeight: 500, color: '#374151', borderRadius: 10, display: 'block' }}
+              onMouseEnter={e => { e.target.style.background = '#f0f9ff'; e.target.style.color = '#0891b2'; }}
+              onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#374151'; }}>Sign In</Link>
+            <Link to="/register" onClick={() => setMenuOpen(false)}
+              style={{ padding: '12px 16px', fontSize: 15, fontWeight: 700, background: '#f97316', color: '#fff', borderRadius: 10, display: 'block', textAlign: 'center', marginTop: 4, boxShadow: '0 4px 12px rgba(249,115,22,.3)' }}>
+              Get Started Free →
+            </Link>
+          </div>
+        </div>
+      )}
+
 
       {/* ── HERO ───────────────────────────────────────────── */}
       <section style={{ background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 35%, #1d4ed8 100%)', minHeight: '88vh', display: 'flex', alignItems: 'center', padding: '100px 5% 80px', position: 'relative', overflow: 'hidden' }}>
@@ -110,7 +166,7 @@ export default function Landing() {
             </div>
           </div>
           {/* Dashboard mockup */}
-          <div style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 20, padding: 24, boxShadow: '0 32px 64px rgba(0,0,0,0.25)', animation: 'float 6s ease-in-out infinite' }}>
+          <div className="hero-mockup" style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 20, padding: 24, boxShadow: '0 32px 64px rgba(0,0,0,0.25)', animation: 'float 6s ease-in-out infinite' }}>
             <div style={{ display: 'flex', gap: 6, marginBottom: 18 }}>
               {['#f43f5e','#f59e0b','#10b981'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />)}
             </div>

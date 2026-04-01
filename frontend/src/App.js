@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -24,44 +24,67 @@ const PrivateRoute = ({ children }) => {
   return user ? children : <Navigate to="/login" replace />;
 };
 
-const TopBar = () => {
+const TopBar = ({ onMenuClick }) => {
   const location = useLocation();
   const info = PAGE_TITLES[location.pathname] || PAGE_TITLES['/dashboard'];
   return (
     <div style={{
-      height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '0 40px', borderBottom: '1px solid var(--border-2)',
+      height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '0 20px', borderBottom: '1px solid var(--border-2)',
       background: 'var(--bg-base)', position: 'sticky', top: 0, zIndex: 50,
-      backdropFilter: 'blur(16px)',
+      backdropFilter: 'blur(16px)', flexShrink: 0,
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span style={{ color: 'var(--text-1)', fontWeight: 700, fontSize: 15, letterSpacing: '-0.01em' }}>{info.title}</span>
-        <span style={{ color: 'var(--text-3)', fontSize: 13 }}>·</span>
-        <span style={{ color: 'var(--text-3)', fontSize: 13 }}>{info.sub}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {/* Hamburger — only on mobile */}
+        <button onClick={onMenuClick} style={{ display: 'none', background: 'none', border: 'none', color: 'var(--text-2)', cursor: 'pointer', padding: 4, fontSize: 18 }} className="menu-btn">
+          <i className="fas fa-bars" />
+        </button>
+        <div>
+          <span style={{ color: 'var(--text-1)', fontWeight: 700, fontSize: 15, letterSpacing: '-0.01em' }}>{info.title}</span>
+          <span style={{ color: 'var(--text-3)', fontSize: 13, marginLeft: 8 }} className="hide-xs">· {info.sub}</span>
+        </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 12px', borderRadius: 99, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)' }}>
-        <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981', animation: 'pulse 3s infinite' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 12px', borderRadius: 99, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)' }}>
+        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981', animation: 'pulse 3s infinite' }} />
         <span style={{ color: '#10b981', fontSize: 12, fontWeight: 500 }}>Live</span>
       </div>
     </div>
   );
 };
 
-const AppLayout = ({ children }) => (
-  <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-base)' }}>
-    <Sidebar />
-    <div style={{ flex: 1, marginLeft: 260, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <TopBar />
-      <main style={{
-        flex: 1, padding: '32px 40px',
-        background: 'var(--page-bg)',
-        transition: 'background 0.3s',
-      }}>
-        {children}
-      </main>
-    </div>
-  </div>
-);
+const AppLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  return (
+    <>
+      <style>{`
+        @media(max-width:768px){
+          .app-sidebar { transform: translateX(-100%) !important; }
+          .app-sidebar.open { transform: translateX(0) !important; }
+          .app-main { margin-left: 0 !important; }
+          .app-main-content { padding: 16px !important; }
+          .menu-btn { display: flex !important; }
+          .hide-xs { display: none !important; }
+        }
+        @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+      `}</style>
+      <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-base)' }}>
+        {/* Overlay for mobile */}
+        {sidebarOpen && (
+          <div onClick={() => setSidebarOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 99, backdropFilter: 'blur(2px)' }} />
+        )}
+        <div className={`app-sidebar${sidebarOpen ? ' open' : ''}`} style={{ transition: 'transform 0.25s ease' }}>
+          <Sidebar onClose={() => setSidebarOpen(false)} />
+        </div>
+        <div className="app-main" style={{ flex: 1, marginLeft: 260, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <TopBar onMenuClick={() => setSidebarOpen(true)} />
+          <main className="app-main-content" style={{ flex: 1, padding: '24px 32px', background: 'var(--page-bg)', transition: 'background 0.3s' }}>
+            {children}
+          </main>
+        </div>
+      </div>
+    </>
+  );
+};
 
 const AppRoutes = () => {
   const { user } = useAuth();
