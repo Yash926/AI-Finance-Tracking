@@ -265,14 +265,14 @@ export default function Insights() {
       {/* ── INSIGHTS TAB ─────────────────────────────────────────────────────── */}
       {tab === 'insights' && (
         <>
-          <div className="card card-sm" style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <select value={month} onChange={e => setMonth(parseInt(e.target.value))} className="fin-input" style={{ width: 'auto', padding: '9px 13px' }}>
+          <div className="card card-sm" style={{ marginBottom: 20, display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', gap: 10, overflowX: 'auto' }}>
+            <select value={month} onChange={e => setMonth(parseInt(e.target.value))} className="fin-input" style={{ width: 'auto', padding: '9px 13px', flexShrink: 0 }}>
               {MO.map((m,i) => <option key={i} value={i+1}>{m}</option>)}
             </select>
-            <select value={year} onChange={e => setYear(parseInt(e.target.value))} className="fin-input" style={{ width: 'auto', padding: '9px 13px' }}>
+            <select value={year} onChange={e => setYear(parseInt(e.target.value))} className="fin-input" style={{ width: 'auto', padding: '9px 13px', flexShrink: 0 }}>
               {[2023,2024,2025,2026].map(y => <option key={y} value={y}>{y}</option>)}
             </select>
-            <button onClick={fetchInsights} disabled={loading} className="btn btn-primary">
+            <button onClick={fetchInsights} disabled={loading} className="btn btn-primary" style={{ flexShrink: 0 }}>
               {loading ? <><span className="spinner" style={{ width:14,height:14,borderWidth:2 }} />Analyzing...</> : <><i className="fas fa-magic" style={{ fontSize:12 }} />Generate Insights</>}
             </button>
           </div>
