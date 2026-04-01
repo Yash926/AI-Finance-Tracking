@@ -34,9 +34,9 @@ export default function Sidebar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
             width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-            background: 'var(--grad-brand)',
+            background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(99,102,241,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+            boxShadow: '0 4px 16px rgba(8,145,178,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
           }}>
             <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 16 }} />
           </div>
@@ -52,14 +52,14 @@ export default function Sidebar() {
 
       {/* User card */}
       {user && (
-        <div style={{ margin: '16px 14px', padding: '12px 14px', borderRadius: 14, background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.14)' }}>
+        <div style={{ margin: '16px 14px', padding: '12px 14px', borderRadius: 14, background: 'rgba(8,145,178,0.07)', border: '1px solid rgba(8,145,178,0.14)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-              background: 'var(--grad-brand)',
+              background: 'linear-gradient(135deg, #0891b2, #0e7490)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: '#fff', fontWeight: 700, fontSize: 13,
-              boxShadow: '0 2px 8px rgba(99,102,241,0.4)',
+              boxShadow: '0 2px 8px rgba(8,145,178,0.4)',
             }}>
               {initials}
             </div>
@@ -87,26 +87,26 @@ export default function Sidebar() {
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '10px 12px', borderRadius: 12, marginBottom: 3,
                 textDecoration: 'none',
-                background: isActive ? 'linear-gradient(135deg, rgba(99,102,241,0.18), rgba(139,92,246,0.1))' : 'transparent',
-                border: `1px solid ${isActive ? 'rgba(99,102,241,0.25)' : 'transparent'}`,
+                background: isActive ? 'linear-gradient(135deg, rgba(8,145,178,0.18), rgba(14,116,144,0.1))' : 'transparent',
+                border: `1px solid ${isActive ? 'rgba(8,145,178,0.25)' : 'transparent'}`,
                 transition: 'all 0.2s',
               }}
             >
               <div style={{
                 width: 34, height: 34, borderRadius: 9, flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isActive ? 'rgba(99,102,241,0.22)' : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${isActive ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.04)'}`,
+                background: isActive ? 'rgba(8,145,178,0.22)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${isActive ? 'rgba(8,145,178,0.3)' : 'rgba(255,255,255,0.04)'}`,
                 transition: 'all 0.2s',
               }}>
-                <i className={icon} style={{ fontSize: 13, color: isActive ? '#a5b4fc' : 'rgba(148,163,184,0.35)' }} />
+                <i className={icon} style={{ fontSize: 13, color: isActive ? '#7dd3fc' : 'rgba(148,163,184,0.35)' }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ color: isActive ? '#c7d2fe' : 'rgba(148,163,184,0.5)', fontWeight: isActive ? 600 : 400, fontSize: 13.5, lineHeight: 1 }}>{label}</div>
-                <div style={{ color: isActive ? 'rgba(165,180,252,0.5)' : 'rgba(148,163,184,0.2)', fontSize: 10.5, marginTop: 2 }}>{sub}</div>
+                <div style={{ color: isActive ? '#bae6fd' : 'rgba(148,163,184,0.5)', fontWeight: isActive ? 600 : 400, fontSize: 13.5, lineHeight: 1 }}>{label}</div>
+                <div style={{ color: isActive ? 'rgba(125,211,252,0.5)' : 'rgba(148,163,184,0.2)', fontSize: 10.5, marginTop: 2 }}>{sub}</div>
               </div>
               {isActive && (
-                <div style={{ width: 4, height: 20, borderRadius: 99, background: 'var(--grad-brand)', flexShrink: 0, boxShadow: '0 0 10px rgba(99,102,241,0.7)' }} />
+                <div style={{ width: 4, height: 20, borderRadius: 99, background: 'linear-gradient(180deg,#0891b2,#0e7490)', flexShrink: 0, boxShadow: '0 0 10px rgba(8,145,178,0.7)' }} />
               )}
             </NavLink>
           );
