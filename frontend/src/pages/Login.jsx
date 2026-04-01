@@ -27,9 +27,9 @@ export default function Login() {
   ];
 
   const features = [
-    { icon: 'fas fa-chart-pie',     text: 'Real-time spending analytics' },
-    { icon: 'fas fa-sparkles',      text: 'AI insights powered by Gemini' },
-    { icon: 'fas fa-shield-halved', text: 'Secured with Firebase Auth' },
+    { icon: 'fas fa-chart-pie',   text: 'Real-time spending analytics' },
+    { icon: 'fas fa-robot',       text: 'AI insights powered by Gemini' },
+    { icon: 'fas fa-shield-alt',  text: 'Secured with Firebase Auth' },
   ];
 
   return (
@@ -38,14 +38,14 @@ export default function Login() {
       <div style={{
         flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
         padding: '60px 64px', position: 'relative', overflow: 'hidden',
-        background: 'linear-gradient(160deg, #052e1c 0%, #0a1f15 60%, #030d0a 100%)',
+        background: 'linear-gradient(160deg, #0f0f23 0%, #13132b 60%, #07080f 100%)',
         borderRight: '1px solid rgba(16,185,129,0.1)',
       }}>
-        <div style={{ position: 'absolute', top: '15%', left: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(5,150,105,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '20%', right: '5%', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '15%', left: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '20%', right: '5%', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 56 }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #059669, #0d9488)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(5,150,105,0.4)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(99,102,241,0.45)' }}>
               <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 20 }} />
             </div>
             <div>
@@ -53,18 +53,18 @@ export default function Login() {
               <div style={{ color: 'rgba(52,211,153,0.5)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Personal Finance</div>
             </div>
           </div>
-          <h2 style={{ color: '#f0fdf4', fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.15, marginBottom: 20 }}>
-            Your finances,<br /><span style={{ color: '#34d399' }}>intelligently</span> managed.
+          <h2 style={{ color: '#f1f5f9', fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.15, marginBottom: 20 }}>
+            Your finances,<br /><span style={{ background: 'var(--grad-brand)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>intelligently</span> managed.
           </h2>
           <p style={{ color: 'rgba(167,243,208,0.5)', fontSize: 15, lineHeight: 1.7, maxWidth: 360, marginBottom: 48 }}>
             Track income and expenses, set budgets, and get AI-powered insights to make smarter financial decisions.
           </p>
           {features.map(({ icon, text }) => (
             <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(5,150,105,0.15)', border: '1px solid rgba(5,150,105,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <i className={icon} style={{ color: '#34d399', fontSize: 13 }} />
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <i className={icon} style={{ color: '#a5b4fc', fontSize: 13 }} />
               </div>
-              <span style={{ color: 'rgba(167,243,208,0.6)', fontSize: 14 }}>{text}</span>
+              <span style={{ color: 'rgba(203,213,225,0.65)', fontSize: 14 }}>{text}</span>
             </div>
           ))}
         </div>

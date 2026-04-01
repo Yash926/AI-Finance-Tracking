@@ -4,10 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const NAV = [
-  { to: '/',             icon: 'fas fa-chart-pie',      label: 'Dashboard',    sub: 'Overview' },
-  { to: '/transactions', icon: 'fas fa-arrow-right-arrow-left', label: 'Transactions', sub: 'History' },
-  { to: '/budget',       icon: 'fas fa-wallet',         label: 'Budget',       sub: 'Limits' },
-  { to: '/insights',     icon: 'fas fa-sparkles',       label: 'AI Insights',  sub: 'Gemini' },
+  { to: '/',             icon: 'fas fa-chart-pie',    label: 'Dashboard',    sub: 'Overview' },
+  { to: '/transactions', icon: 'fas fa-exchange-alt', label: 'Transactions', sub: 'History' },
+  { to: '/budget',       icon: 'fas fa-wallet',       label: 'Budget',       sub: 'Limits' },
+  { to: '/insights',     icon: 'fas fa-robot',        label: 'AI Insights',  sub: 'Gemini' },
 ];
 
 export default function Sidebar() {
@@ -34,15 +34,15 @@ export default function Sidebar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
             width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-            background: 'linear-gradient(135deg, #059669 0%, #0d9488 100%)',
+            background: 'var(--grad-brand)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(5,150,105,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+            boxShadow: '0 4px 16px rgba(99,102,241,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
           }}>
             <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 16 }} />
           </div>
           <div>
-            <div style={{ color: '#f0fdf4', fontWeight: 800, fontSize: 17, letterSpacing: '-0.03em', lineHeight: 1 }}>FinSmart</div>
-            <div style={{ color: 'rgba(52,211,153,0.6)', fontSize: 9.5, fontWeight: 600, letterSpacing: '0.14em', marginTop: 3, textTransform: 'uppercase' }}>AI Finance</div>
+            <div style={{ color: '#f1f5f9', fontWeight: 800, fontSize: 17, letterSpacing: '-0.03em', lineHeight: 1 }}>FinSmart</div>
+            <div style={{ background: 'var(--grad-brand)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em', marginTop: 3, textTransform: 'uppercase' }}>AI Finance</div>
           </div>
         </div>
       </div>
@@ -52,24 +52,22 @@ export default function Sidebar() {
 
       {/* User card */}
       {user && (
-        <div style={{ margin: '16px 14px', padding: '12px 14px', borderRadius: 14, background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.1)' }}>
+        <div style={{ margin: '16px 14px', padding: '12px 14px', borderRadius: 14, background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.14)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-              background: 'linear-gradient(135deg, #059669, #0d9488)',
+              background: 'var(--grad-brand)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: '#fff', fontWeight: 700, fontSize: 13,
-              boxShadow: '0 2px 8px rgba(5,150,105,0.35)',
+              boxShadow: '0 2px 8px rgba(99,102,241,0.4)',
             }}>
               {initials}
             </div>
             <div style={{ overflow: 'hidden', flex: 1 }}>
-              <div style={{ color: '#ecfdf5', fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</div>
-              <div style={{ color: 'rgba(167,243,208,0.4)', fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 1 }}>{user.email}</div>
+              <div style={{ color: '#f1f5f9', fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</div>
+              <div style={{ color: 'rgba(148,163,184,0.5)', fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 1 }}>{user.email}</div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
-              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981', animation: 'pulse 3s infinite' }} />
-            </div>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981', animation: 'pulse 3s infinite', flexShrink: 0 }} />
           </div>
         </div>
       )}
@@ -89,26 +87,26 @@ export default function Sidebar() {
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '10px 12px', borderRadius: 12, marginBottom: 3,
                 textDecoration: 'none',
-                background: isActive ? 'linear-gradient(135deg, rgba(5,150,105,0.2), rgba(13,148,136,0.12))' : 'transparent',
-                border: `1px solid ${isActive ? 'rgba(5,150,105,0.25)' : 'transparent'}`,
-                transition: 'all 0.15s',
+                background: isActive ? 'linear-gradient(135deg, rgba(99,102,241,0.18), rgba(139,92,246,0.1))' : 'transparent',
+                border: `1px solid ${isActive ? 'rgba(99,102,241,0.25)' : 'transparent'}`,
+                transition: 'all 0.2s',
               }}
             >
               <div style={{
                 width: 34, height: 34, borderRadius: 9, flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isActive ? 'rgba(5,150,105,0.25)' : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${isActive ? 'rgba(5,150,105,0.3)' : 'rgba(255,255,255,0.04)'}`,
-                transition: 'all 0.15s',
+                background: isActive ? 'rgba(99,102,241,0.22)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${isActive ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.04)'}`,
+                transition: 'all 0.2s',
               }}>
-                <i className={icon} style={{ fontSize: 13, color: isActive ? '#34d399' : 'rgba(167,243,208,0.3)' }} />
+                <i className={icon} style={{ fontSize: 13, color: isActive ? '#a5b4fc' : 'rgba(148,163,184,0.35)' }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ color: isActive ? '#a7f3d0' : 'rgba(167,243,208,0.45)', fontWeight: isActive ? 600 : 400, fontSize: 13.5, lineHeight: 1 }}>{label}</div>
-                <div style={{ color: isActive ? 'rgba(52,211,153,0.5)' : 'rgba(167,243,208,0.2)', fontSize: 10.5, marginTop: 2 }}>{sub}</div>
+                <div style={{ color: isActive ? '#c7d2fe' : 'rgba(148,163,184,0.5)', fontWeight: isActive ? 600 : 400, fontSize: 13.5, lineHeight: 1 }}>{label}</div>
+                <div style={{ color: isActive ? 'rgba(165,180,252,0.5)' : 'rgba(148,163,184,0.2)', fontSize: 10.5, marginTop: 2 }}>{sub}</div>
               </div>
               {isActive && (
-                <div style={{ width: 4, height: 20, borderRadius: 99, background: 'linear-gradient(180deg, #059669, #0d9488)', flexShrink: 0, boxShadow: '0 0 8px rgba(5,150,105,0.6)' }} />
+                <div style={{ width: 4, height: 20, borderRadius: 99, background: 'var(--grad-brand)', flexShrink: 0, boxShadow: '0 0 10px rgba(99,102,241,0.7)' }} />
               )}
             </NavLink>
           );
@@ -132,7 +130,7 @@ export default function Sidebar() {
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.25)'; }}
           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.05)'; e.currentTarget.style.color = 'rgba(248,113,113,0.5)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.12)'; }}
         >
-          <i className="fas fa-arrow-right-from-bracket" style={{ fontSize: 12 }} />
+          <i className="fas fa-sign-out-alt" style={{ fontSize: 12 }} />
           Sign Out
         </button>
       </div>

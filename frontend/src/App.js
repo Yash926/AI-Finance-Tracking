@@ -28,18 +28,19 @@ const TopBar = () => {
   const info = PAGE_TITLES[location.pathname] || PAGE_TITLES['/'];
   return (
     <div style={{
-      height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '0 40px', borderBottom: '1px solid var(--border-2)',
       background: 'var(--bg-base)', position: 'sticky', top: 0, zIndex: 50,
-      backdropFilter: 'blur(12px)',
+      backdropFilter: 'blur(16px)',
     }}>
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ color: 'var(--text-1)', fontWeight: 700, fontSize: 15, letterSpacing: '-0.01em' }}>{info.title}</span>
-        <span style={{ color: 'var(--text-3)', fontSize: 13, marginLeft: 10 }}>— {info.sub}</span>
+        <span style={{ color: 'var(--text-3)', fontSize: 13 }}>·</span>
+        <span style={{ color: 'var(--text-3)', fontSize: 13 }}>{info.sub}</span>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981', animation: 'pulse 3s infinite' }} />
-        <span style={{ color: 'var(--text-3)', fontSize: 12 }}>Live</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 12px', borderRadius: 99, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)' }}>
+        <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981', animation: 'pulse 3s infinite' }} />
+        <span style={{ color: '#10b981', fontSize: 12, fontWeight: 500 }}>Live</span>
       </div>
     </div>
   );

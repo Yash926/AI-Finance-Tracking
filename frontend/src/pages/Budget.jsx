@@ -59,7 +59,7 @@ export default function Budget() {
 
       {budgetData?.alerts?.map((a, i) => (
         <div key={i} className={`alert alert-${a.type}`}>
-          <i className={`fas fa-${a.type === 'danger' ? 'circle-exclamation' : 'triangle-exclamation'}`} />
+          <i className={`fas fa-${a.type === 'danger' ? 'exclamation-circle' : 'exclamation-triangle'}`} />
           {a.message}
         </div>
       ))}

@@ -12,7 +12,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcEleme
 const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MO_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-const CHART_COLORS = ['#059669','#0d9488','#0891b2','#f59e0b','#f43f5e','#8b5cf6','#fbbf24','#34d399','#67e8f9','#a78bfa'];
+const CHART_COLORS = ['#6366f1','#8b5cf6','#a855f7','#06b6d4','#10b981','#f59e0b','#f43f5e','#3b82f6','#ec4899','#14b8a6'];
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -57,7 +57,7 @@ export default function Dashboard() {
     ? ((summary.netBalance / summary.totalIncome) * 100).toFixed(1) : 0;
 
   const pct = parseFloat(budget?.percentUsed || 0);
-  const budgetColor = pct >= 100 ? 'var(--danger)' : pct >= 80 ? 'var(--warning)' : 'var(--primary)';
+  const budgetColor = pct >= 100 ? '#f43f5e' : pct >= 80 ? '#f59e0b' : '#6366f1';
 
   const doughnutData = {
     labels: Object.keys(summary?.categoryBreakdown || {}),
@@ -67,8 +67,8 @@ export default function Dashboard() {
   const lineData = {
     labels: MO,
     datasets: [
-      { label: 'Income',  data: trend.map(t => t.income),  borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.08)',  fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#059669' },
-      { label: 'Expense', data: trend.map(t => t.expense), borderColor: '#f43f5e', backgroundColor: 'rgba(244,63,94,0.06)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#f43f5e' },
+      { label: 'Income',  data: trend.map(t => t.income),  borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)',  fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#10b981', pointBorderColor: '#fff', pointBorderWidth: 2 },
+      { label: 'Expense', data: trend.map(t => t.expense), borderColor: '#f43f5e', backgroundColor: 'rgba(244,63,94,0.08)', fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#f43f5e', pointBorderColor: '#fff', pointBorderWidth: 2 },
     ],
   };
 
@@ -113,17 +113,17 @@ export default function Dashboard() {
       {/* Alerts */}
       {budget?.alerts?.map((a, i) => (
         <div key={i} className={`alert alert-${a.type}`}>
-          <i className={`fas fa-${a.type === 'danger' ? 'circle-exclamation' : 'triangle-exclamation'}`} />
+          <i className={`fas fa-${a.type === 'danger' ? 'exclamation-circle' : 'exclamation-triangle'}`} />
           {a.message}
         </div>
       ))}
 
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, marginBottom: 20 }}>
-        <StatCard title="Total Income"   value={`₹${(summary?.totalIncome||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-trend-up"   color="#059669" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="up" />
-        <StatCard title="Total Expenses" value={`₹${(summary?.totalExpense||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-trend-down" color="#f43f5e" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="down" />
-        <StatCard title="Net Balance"    value={`₹${(summary?.netBalance||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}    icon="fas fa-scale-balanced"   color="#0d9488" subtitle="Income − Expenses" />
-        <StatCard title="Savings Rate"   value={`${savingsRate}%`}                                                                    icon="fas fa-piggy-bank"       color="#f59e0b" subtitle={`${summary?.transactionCount||0} transactions`} />
+        <StatCard title="Total Income"   value={`₹${(summary?.totalIncome||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-up"   color="#10b981" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="up" />
+        <StatCard title="Total Expenses" value={`₹${(summary?.totalExpense||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}  icon="fas fa-arrow-down" color="#f43f5e" subtitle={`${MO[selMonth-1]} ${selYear}`} trend="down" />
+        <StatCard title="Net Balance"    value={`₹${(summary?.netBalance||0).toLocaleString('en-IN',{minimumFractionDigits:2})}`}    icon="fas fa-balance-scale" color="#6366f1" subtitle="Income − Expenses" />
+        <StatCard title="Savings Rate"   value={`${savingsRate}%`}                                                                    icon="fas fa-piggy-bank"    color="#f59e0b" subtitle={`${summary?.transactionCount||0} transactions`} />
       </div>
 
       {/* Budget bar */}
@@ -182,7 +182,7 @@ export default function Dashboard() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div className="icon-box icon-box-sm" style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.2)' }}>
-              <i className="fas fa-clock-rotate-left" style={{ color: '#06b6d4', fontSize: 12 }} />
+              <i className="fas fa-history" style={{ color: '#06b6d4', fontSize: 12 }} />
             </div>
             <span className="t-heading">Recent Transactions</span>
           </div>

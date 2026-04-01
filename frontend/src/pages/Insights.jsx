@@ -43,7 +43,7 @@ function ChatBubble({ msg }) {
       )}
       <div style={{
         maxWidth: '75%', padding: '11px 16px', borderRadius: isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-        background: isUser ? 'linear-gradient(135deg,#059669,#0d9488)' : 'var(--bg-elevated)',
+        background: isUser ? 'var(--grad-brand)' : 'var(--bg-elevated)',
         border: isUser ? 'none' : '1px solid var(--border-1)',
         color: isUser ? '#fff' : 'var(--text-1)',
         fontSize: 14, lineHeight: 1.65,
@@ -226,10 +226,10 @@ export default function Insights() {
   const tabStyle = (t) => ({
     padding: '9px 20px', borderRadius: 10, border: 'none', cursor: 'pointer',
     fontFamily: 'inherit', fontSize: 13.5, fontWeight: tab === t ? 600 : 400,
-    background: tab === t ? 'var(--primary)' : 'transparent',
+    background: tab === t ? 'var(--grad-brand)' : 'transparent',
     color: tab === t ? '#fff' : 'var(--text-3)',
-    transition: 'all 0.15s',
-    boxShadow: tab === t ? '0 2px 8px rgba(5,150,105,0.3)' : 'none',
+    transition: 'all 0.2s',
+    boxShadow: tab === t ? '0 2px 12px rgba(99,102,241,0.4)' : 'none',
   });
 
   return (
@@ -240,8 +240,8 @@ export default function Insights() {
       <div className="page-header" style={{ marginBottom: 20 }}>
         <div>
           <h1 className="t-title" style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <div className="icon-box icon-box-sm" style={{ background: 'linear-gradient(135deg,#059669,#0d9488)' }}>
-              <i className="fas fa-sparkles" style={{ color: '#fff', fontSize: 12 }} />
+            <div className="icon-box icon-box-sm" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
+              <i className="fas fa-robot" style={{ color: '#fff', fontSize: 12 }} />
             </div>
             AI Financial Intelligence
           </h1>
@@ -252,7 +252,7 @@ export default function Insights() {
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: 'var(--bg-surface)', padding: 4, borderRadius: 14, width: 'fit-content', border: '1px solid var(--border-1)' }}>
         {[
-          { key: 'insights', icon: 'fas fa-wand-magic-sparkles', label: 'Insights' },
+          { key: 'insights', icon: 'fas fa-magic',      label: 'Insights' },
           { key: 'predict',  icon: 'fas fa-chart-line',          label: 'Predictions' },
           { key: 'chat',     icon: 'fas fa-comments',            label: 'AI Chat' },
         ].map(({ key, icon, label }) => (
@@ -273,7 +273,7 @@ export default function Insights() {
               {[2023,2024,2025,2026].map(y => <option key={y} value={y}>{y}</option>)}
             </select>
             <button onClick={fetchInsights} disabled={loading} className="btn btn-primary">
-              {loading ? <><span className="spinner" style={{ width:14,height:14,borderWidth:2 }} />Analyzing...</> : <><i className="fas fa-wand-magic-sparkles" style={{ fontSize:12 }} />Generate Insights</>}
+              {loading ? <><span className="spinner" style={{ width:14,height:14,borderWidth:2 }} />Analyzing...</> : <><i className="fas fa-magic" style={{ fontSize:12 }} />Generate Insights</>}
             </button>
           </div>
 
@@ -282,7 +282,7 @@ export default function Insights() {
               {[
                 { label:'Total Income',  value:`₹${summary.totalIncome?.toFixed(2)||0}`,  color:'var(--success)', icon:'fas fa-arrow-up' },
                 { label:'Total Expense', value:`₹${summary.totalExpense?.toFixed(2)||0}`, color:'var(--danger)',  icon:'fas fa-arrow-down' },
-                { label:'Net Balance',   value:`₹${summary.netBalance?.toFixed(2)||0}`,   color:'var(--primary)', icon:'fas fa-scale-balanced' },
+                { label:'Net Balance',   value:`₹${summary.netBalance?.toFixed(2)||0}`,   color:'var(--primary)', icon:'fas fa-balance-scale' },
               ].map(({ label, value, color, icon }) => (
                 <div key={label} className="card card-sm" style={{ display:'flex', alignItems:'center', gap:12 }}>
                   <div className="icon-box icon-box-md" style={{ background:`${color}14`, border:`1px solid ${color}28`, flexShrink:0 }}>
@@ -346,9 +346,9 @@ export default function Insights() {
 
               {/* Prediction cards */}
               <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:14, marginBottom:20 }}>
-                <PredictionCard label="Predicted Income"  value={predictions.predictedIncome}  prev={null}             color="#10b981" icon="fas fa-arrow-trend-up" />
-                <PredictionCard label="Predicted Expense" value={predictions.predictedExpense} prev={lastMonthExpense} color="#ef4444" icon="fas fa-arrow-trend-down" />
-                <PredictionCard label="Predicted Balance" value={predictions.predictedBalance} prev={null}             color="#059669" icon="fas fa-scale-balanced" />
+                <PredictionCard label="Predicted Income"  value={predictions.predictedIncome}  prev={null}             color="#10b981" icon="fas fa-arrow-up" />
+                <PredictionCard label="Predicted Expense" value={predictions.predictedExpense} prev={lastMonthExpense} color="#ef4444" icon="fas fa-arrow-down" />
+                <PredictionCard label="Predicted Balance" value={predictions.predictedBalance} prev={null}             color="#059669" icon="fas fa-balance-scale" />
               </div>
 
               {/* Category predictions */}

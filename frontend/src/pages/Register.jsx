@@ -37,7 +37,7 @@ export default function Register() {
 
       <div style={{ width: '100%', maxWidth: 460, position: 'relative' }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ width: 52, height: 52, borderRadius: 15, margin: '0 auto 18px', background: 'linear-gradient(135deg, #059669, #0d9488)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 28px rgba(5,150,105,0.4)' }}>
+          <div style={{ width: 52, height: 52, borderRadius: 15, margin: '0 auto 18px', background: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 28px rgba(99,102,241,0.45)' }}>
             <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 20 }} />
           </div>
           <h1 style={{ color: 'var(--text-1)', fontSize: '1.875rem', fontWeight: 800, letterSpacing: '-0.04em', marginBottom: 8 }}>Create account</h1>
