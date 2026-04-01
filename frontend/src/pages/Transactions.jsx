@@ -79,8 +79,8 @@ export default function Transactions() {
       </div>
 
       {/* Filters */}
-      <div className="card card-sm" style={{ marginBottom: 16, display: 'flex', gap: 8, alignItems: 'center', overflowX: 'auto' }}>
-        <i className="fas fa-sliders" style={{ color: 'var(--text-3)', fontSize: 13, flexShrink: 0 }} />
+      <div className="card card-sm" style={{ marginBottom: 16, display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', gap: 8, alignItems: 'center', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+        <i className="fas fa-sliders-h" style={{ color: 'var(--text-3)', fontSize: 13, flexShrink: 0 }} />
         {[
           { key: 'type',  opts: [{ v:'',l:'All Types' },{ v:'income',l:'Income' },{ v:'expense',l:'Expense' }] },
           { key: 'month', opts: [{ v:'',l:'All Months' },...MO.map((m,i) => ({ v:i+1,l:m }))] },
@@ -100,7 +100,7 @@ export default function Transactions() {
         )}
         <button onClick={() => setFilter({ type:'',category:'',month:'',year:new Date().getFullYear() })}
           className="btn btn-ghost btn-sm" style={{ flexShrink: 0, marginLeft: 'auto' }}>
-          <i className="fas fa-xmark" /> Clear
+          <i className="fas fa-times" /> Clear
         </button>
       </div>
 
@@ -112,7 +112,7 @@ export default function Transactions() {
               <h2 className="t-heading" style={{ fontSize: 16 }}>{editData ? 'Edit Transaction' : 'New Transaction'}</h2>
               <button onClick={() => { setShowForm(false); setEditData(null); }}
                 className="btn btn-ghost btn-sm" style={{ width: 32, height: 32, padding: 0, borderRadius: 8 }}>
-                <i className="fas fa-xmark" />
+                <i className="fas fa-times" />
               </button>
             </div>
             <TransactionForm editData={editData}
