@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import Logo from './Logo';
 
 const NAV = [
   { to: '/dashboard',    icon: 'fas fa-chart-pie',    label: 'Dashboard',    sub: 'Overview' },
@@ -30,21 +31,8 @@ export default function Sidebar() {
     }}>
 
       {/* Logo */}
-      <div style={{ padding: '28px 22px 22px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{
-            width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-            background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(8,145,178,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-          }}>
-            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 16 }} />
-          </div>
-          <div>
-            <div style={{ color: '#f1f5f9', fontWeight: 800, fontSize: 17, letterSpacing: '-0.03em', lineHeight: 1 }}>FinSmart</div>
-            <div style={{ background: 'var(--grad-brand)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em', marginTop: 3, textTransform: 'uppercase' }}>AI Finance</div>
-          </div>
-        </div>
+      <div style={{ padding: '22px 20px 18px' }}>
+        <Logo size={38} showText textColor="#f1f5f9" />
       </div>
 
       {/* Divider */}

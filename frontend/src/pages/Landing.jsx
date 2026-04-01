@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import Logo from '../components/Logo';
 
 function useInView() {
   const ref = useRef(null);
@@ -86,11 +87,8 @@ export default function Landing() {
       {/* ── NAVBAR ─────────────────────────────────────────── */}
       <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 60, padding: '0 5%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: scrolled ? 'rgba(255,255,255,0.97)' : 'transparent', backdropFilter: scrolled ? 'blur(20px)' : 'none', borderBottom: scrolled ? '1px solid rgba(8,145,178,0.12)' : 'none', transition: 'all .3s', boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.06)' : 'none' }}>
         {/* Logo */}
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <div style={{ width: 34, height: 34, borderRadius: 9, background: 'linear-gradient(135deg,#0891b2,#0e7490)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(8,145,178,.4)', flexShrink: 0 }}>
-            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 13 }} />
-          </div>
-          <span style={{ fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em', color: scrolled ? '#0c2340' : '#fff' }}>FinSmart <span style={{ color: '#f97316' }}>AI</span></span>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <Logo size={34} showText textColor={scrolled ? '#0c2340' : '#fff'} dark={scrolled} />
         </Link>
 
         {/* Desktop nav links */}
@@ -290,10 +288,7 @@ export default function Landing() {
         <div className="footer-grid" style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 5% 44px', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1.6fr', gap: 48 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 9, background: 'linear-gradient(135deg,#0891b2,#0e7490)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 12 }} />
-              </div>
-              <span style={{ fontWeight: 800, fontSize: 15, color: '#fff' }}>FinSmart <span style={{ color: '#f97316' }}>AI</span></span>
+              <Logo size={32} showText textColor="#fff" />
             </div>
             <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, maxWidth: 210, marginBottom: 22 }}>Empowering your financial journey with AI-powered insights and smart budgeting.</p>
             <div style={{ display: 'flex', gap: 10 }}>

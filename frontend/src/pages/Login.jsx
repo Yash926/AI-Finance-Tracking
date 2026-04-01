@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -45,13 +46,7 @@ export default function Login() {
         <div style={{ position: 'absolute', bottom: '20%', right: '5%', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 56 }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(99,102,241,0.45)' }}>
-              <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 20 }} />
-            </div>
-            <div>
-              <div style={{ color: '#f0fdf4', fontWeight: 800, fontSize: 20, letterSpacing: '-0.03em' }}>FinSmart AI</div>
-              <div style={{ color: 'rgba(52,211,153,0.5)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Personal Finance</div>
-            </div>
+            <Logo size={48} showText textColor="#f0fdf4" />
           </div>
           <h2 style={{ color: '#f1f5f9', fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.15, marginBottom: 20 }}>
             Your finances,<br /><span style={{ background: 'var(--grad-brand)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>intelligently</span> managed.
