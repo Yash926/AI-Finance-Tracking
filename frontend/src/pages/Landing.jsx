@@ -254,17 +254,99 @@ export default function Landing() {
       </section>
 
       {/* ── Footer ─────────────────────────────────────────────────────────── */}
-      <footer style={{ borderTop: '1px solid rgba(99,102,241,0.1)', padding: '32px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 11 }} />
+      <footer style={{ background: '#0d1117', borderTop: '1px solid rgba(99,102,241,0.1)' }}>
+        {/* Main footer grid */}
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 40px 40px', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1.5fr', gap: 48 }}>
+
+          {/* Brand column */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 9, background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <i className="fas fa-chart-line" style={{ color: '#fff', fontSize: 13 }} />
+              </div>
+              <span style={{ fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em' }}>FinSmart AI</span>
+            </div>
+            <p style={{ fontSize: 14, color: 'rgba(148,163,184,0.65)', lineHeight: 1.65, marginBottom: 24, maxWidth: 220 }}>
+              Empowering your financial journey with AI-powered insights and smart budgeting.
+            </p>
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: 12 }}>
+              {[
+                { icon: 'fab fa-github',   href: 'https://github.com/Yash926' },
+                { icon: 'fab fa-linkedin', href: 'https://linkedin.com/in/yashtripathi12' },
+                { icon: 'fab fa-twitter',  href: '#' },
+                { icon: 'fab fa-instagram',href: '#' },
+              ].map(({ icon, href }) => (
+                <a key={icon} href={href} target="_blank" rel="noreferrer"
+                  style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(148,163,184,0.6)', textDecoration: 'none', transition: 'all 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.2)'; e.currentTarget.style.color = '#a5b4fc'; e.currentTarget.style.borderColor = 'rgba(99,102,241,0.4)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.1)'; e.currentTarget.style.color = 'rgba(148,163,184,0.6)'; e.currentTarget.style.borderColor = 'rgba(99,102,241,0.18)'; }}>
+                  <i className={icon} style={{ fontSize: 13 }} />
+                </a>
+              ))}
+            </div>
           </div>
-          <span style={{ fontWeight: 700, fontSize: 14, color: 'rgba(241,245,249,0.7)' }}>FinSmart AI</span>
+
+          {/* Quick Links */}
+          <div>
+            <h4 style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 20, letterSpacing: '-0.01em' }}>Quick Links</h4>
+            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[
+                { label: 'Features',     href: '#features' },
+                { label: 'How it Works', href: '#how' },
+                { label: 'Sign In',      href: '/login' },
+                { label: 'Register',     href: '/register' },
+              ].map(({ label, href }) => (
+                <li key={label}>
+                  <a href={href} style={{ fontSize: 14, color: 'rgba(148,163,184,0.6)', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => e.target.style.color = '#a5b4fc'}
+                    onMouseLeave={e => e.target.style.color = 'rgba(148,163,184,0.6)'}>
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 20, letterSpacing: '-0.01em' }}>Legal</h4>
+            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map(label => (
+                <li key={label}>
+                  <a href="#" style={{ fontSize: 14, color: 'rgba(148,163,184,0.6)', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => e.target.style.color = '#a5b4fc'}
+                    onMouseLeave={e => e.target.style.color = 'rgba(148,163,184,0.6)'}>
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 20, letterSpacing: '-0.01em' }}>Contact Us</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {[
+                { icon: 'fas fa-envelope', text: 'support@finsmart.ai' },
+                { icon: 'fas fa-phone',    text: '+91 98765 43210' },
+                { icon: 'fas fa-map-marker-alt', text: 'Lovely Professional University, Punjab, India' },
+              ].map(({ icon, text }) => (
+                <div key={text} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <i className={icon} style={{ color: '#6366f1', fontSize: 13, marginTop: 2, flexShrink: 0 }} />
+                  <span style={{ fontSize: 13.5, color: 'rgba(148,163,184,0.65)', lineHeight: 1.5 }}>{text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <p style={{ fontSize: 13, color: 'rgba(148,163,184,0.4)' }}>Built with React · Firebase · Gemini AI</p>
-        <div style={{ display: 'flex', gap: 20 }}>
-          <Link to="/login"    style={{ fontSize: 13, color: 'rgba(148,163,184,0.5)', textDecoration: 'none' }}>Sign In</Link>
-          <Link to="/register" style={{ fontSize: 13, color: 'rgba(148,163,184,0.5)', textDecoration: 'none' }}>Register</Link>
+
+        {/* Bottom bar */}
+        <div style={{ borderTop: '1px solid rgba(99,102,241,0.08)', padding: '20px 40px', textAlign: 'center' }}>
+          <p style={{ fontSize: 13, color: 'rgba(148,163,184,0.4)' }}>
+            © {new Date().getFullYear()} FinSmart AI. All rights reserved. Made with ❤️ by Yash Tripathi
+          </p>
         </div>
       </footer>
 
