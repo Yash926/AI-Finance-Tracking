@@ -79,27 +79,27 @@ export default function Transactions() {
       </div>
 
       {/* Filters */}
-      <div className="card card-sm" style={{ marginBottom: 16, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-        <i className="fas fa-sliders" style={{ color: 'var(--text-3)', fontSize: 13 }} />
+      <div className="card card-sm" style={{ marginBottom: 16, display: 'flex', gap: 8, alignItems: 'center', overflowX: 'auto' }}>
+        <i className="fas fa-sliders" style={{ color: 'var(--text-3)', fontSize: 13, flexShrink: 0 }} />
         {[
           { key: 'type',  opts: [{ v:'',l:'All Types' },{ v:'income',l:'Income' },{ v:'expense',l:'Expense' }] },
           { key: 'month', opts: [{ v:'',l:'All Months' },...MO.map((m,i) => ({ v:i+1,l:m }))] },
           { key: 'year',  opts: [2023,2024,2025,2026].map(y => ({ v:y,l:y })) },
         ].map(({ key, opts }) => (
           <select key={key} value={filter[key]} onChange={e => setFilter(p => ({ ...p, [key]: e.target.value }))}
-            className="fin-input" style={{ width: 'auto', padding: '7px 11px', fontSize: 13 }}>
+            className="fin-input" style={{ width: 'auto', padding: '7px 11px', fontSize: 13, flexShrink: 0 }}>
             {opts.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
           </select>
         ))}
         {filter.type && (
           <select value={filter.category} onChange={e => setFilter(p => ({ ...p, category: e.target.value }))}
-            className="fin-input" style={{ width: 'auto', padding: '7px 11px', fontSize: 13 }}>
+            className="fin-input" style={{ width: 'auto', padding: '7px 11px', fontSize: 13, flexShrink: 0 }}>
             <option value="">All Categories</option>
             {cats.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         )}
         <button onClick={() => setFilter({ type:'',category:'',month:'',year:new Date().getFullYear() })}
-          className="btn btn-ghost btn-sm">
+          className="btn btn-ghost btn-sm" style={{ flexShrink: 0, marginLeft: 'auto' }}>
           <i className="fas fa-xmark" /> Clear
         </button>
       </div>
