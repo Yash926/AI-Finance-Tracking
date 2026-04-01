@@ -68,13 +68,18 @@ export default function Landing() {
           .footer-grid{grid-template-columns:1fr 1fr!important}
           .nav-links{display:none!important}
           .nav-hamburger{display:flex!important}
+          .hero-mockup{animation:none!important;margin-top:32px;max-width:480px;margin-left:auto;margin-right:auto}
+          .hero-btns{justify-content:center}
         }
         @media(max-width:600px){
           .feat-grid{grid-template-columns:1fr!important}
           .steps-grid{grid-template-columns:1fr!important}
           .testi-grid{grid-template-columns:1fr!important}
           .footer-grid{grid-template-columns:1fr!important}
-          .hero-mockup{display:none!important}
+          .hero-mockup{display:block!important;width:100%}
+        }
+        @media(max-width:480px){
+          .hero-btns a{padding:11px 18px!important;font-size:13px!important}
         }
       `}</style>
 
@@ -137,7 +142,7 @@ export default function Landing() {
 
 
       {/* ── HERO ───────────────────────────────────────────── */}
-      <section style={{ background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 35%, #1d4ed8 100%)', minHeight: '88vh', display: 'flex', alignItems: 'center', padding: '100px 5% 80px', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 35%, #1d4ed8 100%)', minHeight: '88vh', display: 'flex', alignItems: 'center', padding: 'clamp(80px,10vw,100px) 5% clamp(60px,8vw,80px)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', animation: 'float 8s ease-in-out infinite' }} />
         <div style={{ position: 'absolute', bottom: '-15%', left: '-8%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(255,255,255,0.03)', pointerEvents: 'none' }} />
         <div className="hero-grid" style={{ maxWidth: 1100, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
@@ -152,7 +157,7 @@ export default function Landing() {
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', lineHeight: 1.75, maxWidth: 420, marginBottom: 36 }}>
               Empower your financial journey with FinSmart AI — Use AI to track spending, budgeting, and growing your wealth.
             </p>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <div className="hero-btns" style={{ display: 'flex', gap: 12, flexWrap: 'nowrap' }}>
               <Link to="/register" style={{ padding: '13px 30px', borderRadius: 10, fontSize: 15, fontWeight: 700, background: '#f97316', color: '#fff', boxShadow: '0 6px 20px rgba(249,115,22,.45)', display: 'inline-flex', alignItems: 'center', gap: 8 }}
                 onMouseEnter={e => { e.currentTarget.style.background = '#ea6c0a'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(249,115,22,.55)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = '#f97316'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(249,115,22,.45)'; }}>
