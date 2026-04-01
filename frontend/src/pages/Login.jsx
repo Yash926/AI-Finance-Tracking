@@ -15,7 +15,7 @@ export default function Login() {
     try {
       await login(form.email, form.password);
       toast.success('Welcome back!');
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       toast.error(err.code === 'auth/invalid-credential' ? 'Invalid email or password' : err.message);
     } finally { setLoading(false); }

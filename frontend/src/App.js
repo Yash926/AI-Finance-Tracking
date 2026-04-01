@@ -10,9 +10,10 @@ import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import Budget from './pages/Budget';
 import Insights from './pages/Insights';
+import Landing from './pages/Landing';
 
 const PAGE_TITLES = {
-  '/':             { title: 'Dashboard',    sub: 'Your financial overview' },
+  '/dashboard':    { title: 'Dashboard',    sub: 'Your financial overview' },
   '/transactions': { title: 'Transactions', sub: 'Manage income & expenses' },
   '/budget':       { title: 'Budget',       sub: 'Monthly spending limits' },
   '/insights':     { title: 'AI Insights',  sub: 'Powered by Gemini' },
@@ -25,7 +26,7 @@ const PrivateRoute = ({ children }) => {
 
 const TopBar = () => {
   const location = useLocation();
-  const info = PAGE_TITLES[location.pathname] || PAGE_TITLES['/'];
+  const info = PAGE_TITLES[location.pathname] || PAGE_TITLES['/dashboard'];
   return (
     <div style={{
       height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -66,9 +67,10 @@ const AppRoutes = () => {
   const { user } = useAuth();
   return (
     <Routes>
-      <Route path="/login"        element={user ? <Navigate to="/" replace /> : <Login />} />
-      <Route path="/register"     element={user ? <Navigate to="/" replace /> : <Register />} />
-      <Route path="/"             element={<PrivateRoute><AppLayout><Dashboard /></AppLayout></PrivateRoute>} />
+      <Route path="/"             element={<Landing />} />
+      <Route path="/login"        element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/register"     element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+      <Route path="/dashboard"    element={<PrivateRoute><AppLayout><Dashboard /></AppLayout></PrivateRoute>} />
       <Route path="/transactions" element={<PrivateRoute><AppLayout><Transactions /></AppLayout></PrivateRoute>} />
       <Route path="/budget"       element={<PrivateRoute><AppLayout><Budget /></AppLayout></PrivateRoute>} />
       <Route path="/insights"     element={<PrivateRoute><AppLayout><Insights /></AppLayout></PrivateRoute>} />

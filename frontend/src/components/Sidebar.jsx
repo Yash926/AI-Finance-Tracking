@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const NAV = [
-  { to: '/',             icon: 'fas fa-chart-pie',    label: 'Dashboard',    sub: 'Overview' },
+  { to: '/dashboard',    icon: 'fas fa-chart-pie',    label: 'Dashboard',    sub: 'Overview' },
   { to: '/transactions', icon: 'fas fa-exchange-alt', label: 'Transactions', sub: 'History' },
   { to: '/budget',       icon: 'fas fa-wallet',       label: 'Budget',       sub: 'Limits' },
   { to: '/insights',     icon: 'fas fa-robot',        label: 'AI Insights',  sub: 'Gemini' },
@@ -80,7 +80,7 @@ export default function Sidebar() {
       {/* Nav */}
       <nav style={{ flex: 1, padding: '4px 10px 12px' }}>
         {NAV.map(({ to, icon, label, sub }) => {
-          const isActive = to === '/' ? location.pathname === '/' : location.pathname.startsWith(to);
+          const isActive = to === '/dashboard' ? location.pathname === '/dashboard' : location.pathname.startsWith(to);
           return (
             <NavLink key={to} to={to} end={to === '/'}
               style={{

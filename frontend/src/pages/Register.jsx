@@ -24,7 +24,7 @@ export default function Register() {
     try {
       await register(form.name, form.email, form.password);
       toast.success('Account created!');
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       toast.error(err.code === 'auth/email-already-in-use' ? 'Email already registered' : err.message);
     } finally { setLoading(false); }
