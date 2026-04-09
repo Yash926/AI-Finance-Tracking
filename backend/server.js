@@ -10,7 +10,16 @@ admin.initializeApp({
 });
 
 const app = express();
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
+const allowedOrigins = [
+  process.env.CLIENT_URL || 'http://localhost:3000',
+  'http://localhost:3000',
+];
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin)) cb(null, true);
+    else cb(new Error('Not allowed by CORS'));
+  }
+}));
 app.use(express.json());
 
 // ── Auth middleware ───────────────────────────────────────────────────────────
