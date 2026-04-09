@@ -2,7 +2,6 @@ const express = require('express');
 const cors    = require('cors');
 const dotenv  = require('dotenv');
 const admin   = require('firebase-admin');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 dotenv.config();
 
@@ -22,25 +21,40 @@ const verifyToken = async (req, res, next) => {
   catch { res.status(401).json({ message: 'Invalid token' }); }
 };
 
-// ── Gemini helper ─────────────────────────────────────────────────────────────
-function getModel() {
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  return genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+// ── Groq helper ───────────────────────────────────────────────────────────────
+async function groqChat(messages) {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'llama-3.1-8b-instant',
+      messages,
+      temperature: 0.7,
+    }),
+  });
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    throw new Error(`Groq API error: ${res.status} - ${JSON.stringify(errBody)}`);
+  }
+  const data = await res.json();
+  return data.choices[0].message.content;
 }
 
 // ── POST /api/ai/insights ─────────────────────────────────────────────────────
 app.post('/api/ai/insights', verifyToken, async (req, res) => {
   try {
     const { summary } = req.body;
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey || apiKey === 'your_groq_api_key_here') {
       return res.json({ success: true, insights: mockInsights(summary) });
     }
-    const model  = getModel();
-    const result = await model.generateContent(buildInsightPrompt(summary));
-    res.json({ success: true, insights: result.response.text() });
+    const text = await groqChat([{ role: 'user', content: buildInsightPrompt(summary) }]);
+    res.json({ success: true, insights: text });
   } catch (err) {
-    console.error('Gemini insights error:', err.message);
+    console.error('Groq insights error:', err.message);
     res.json({ success: true, insights: mockInsights(req.body.summary || {}) });
   }
 });
@@ -50,36 +64,22 @@ app.post('/api/ai/insights', verifyToken, async (req, res) => {
 app.post('/api/ai/chat', verifyToken, async (req, res) => {
   try {
     const { message, context, history = [] } = req.body;
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
 
-    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-      return res.json({ success: true, reply: "AI chat requires a Gemini API key. Please configure it in the backend." });
+    if (!apiKey || apiKey === 'your_groq_api_key_here') {
+      return res.json({ success: true, reply: "AI chat requires a Groq API key. Please configure it in the backend." });
     }
 
-    const model = getModel();
+    const messages = [
+      { role: 'system', content: buildChatSystemPrompt(context) },
+      ...history.map(h => ({ role: h.role === 'model' ? 'assistant' : h.role, content: h.text })),
+      { role: 'user', content: message },
+    ];
 
-    // Build chat with history
-    const chat = model.startChat({
-      history: [
-        {
-          role: 'user',
-          parts: [{ text: buildChatSystemPrompt(context) }],
-        },
-        {
-          role: 'model',
-          parts: [{ text: 'Understood. I am your personal financial advisor with full access to your transaction data. Ask me anything about your finances.' }],
-        },
-        ...history.map(h => ({
-          role: h.role,
-          parts: [{ text: h.text }],
-        })),
-      ],
-    });
-
-    const result = await chat.sendMessage(message);
-    res.json({ success: true, reply: result.response.text() });
+    const reply = await groqChat(messages);
+    res.json({ success: true, reply });
   } catch (err) {
-    console.error('Gemini chat error:', err.message);
+    console.error('Groq chat error:', err.message);
     res.status(500).json({ success: false, message: 'Chat failed: ' + err.message });
   }
 });
@@ -97,14 +97,12 @@ app.post('/api/ai/predict', verifyToken, async (req, res) => {
     // ── Linear regression per category ───────────────────────────────────────
     const predictions = computePredictions(monthlyData);
 
-    // ── Ask Gemini to narrate the predictions ─────────────────────────────────
-    const apiKey = process.env.GEMINI_API_KEY;
+    // ── Ask Groq to narrate the predictions ──────────────────────────────────
+    const apiKey = process.env.GROQ_API_KEY;
     let narrative = '';
-    if (apiKey && apiKey !== 'your_gemini_api_key_here') {
+    if (apiKey && apiKey !== 'your_groq_api_key_here') {
       try {
-        const model  = getModel();
-        const result = await model.generateContent(buildPredictionPrompt(monthlyData, predictions));
-        narrative = result.response.text();
+        narrative = await groqChat([{ role: 'user', content: buildPredictionPrompt(monthlyData, predictions) }]);
       } catch (e) {
         console.error('Prediction narrative error:', e.message);
       }
