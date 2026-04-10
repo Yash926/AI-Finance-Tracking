@@ -185,12 +185,18 @@ Format: bullet points with emoji. Use ₹. Be specific and practical.`;
 }
 
 function buildChatSystemPrompt(context) {
-  if (!context) return 'You are a helpful personal financial advisor.';
+  const strict = `You are a personal AI financial advisor. You ONLY answer questions related to personal finance, budgeting, expenses, income, savings, investments, and the user's transaction data.
+If the user asks anything unrelated to finance or their financial data, respond with: "I can only help with finance-related questions. Please ask me about your budget, expenses, income, or savings."
+Do not answer questions about general knowledge, technology, entertainment, politics, health, or any other non-finance topic under any circumstances.`;
+
+  if (!context) return strict;
   const { summary, transactions = [] } = context;
   const recentTx = transactions.slice(0, 10).map(t =>
     `  ${t.type === 'income' ? '+' : '-'}₹${t.amount} (${t.category}) on ${new Date(t.date).toLocaleDateString()}`
   ).join('\n');
-  return `You are a personal AI financial advisor for this user. Here is their financial context:
+  return `${strict}
+
+Here is the user's financial context:
 
 Monthly Summary:
   Income:  ₹${summary?.totalIncome?.toFixed(2) || 0}
